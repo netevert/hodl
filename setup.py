@@ -1,7 +1,6 @@
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages
 # To use a consistent encoding
-from codecs import open
 from os import path
 
 here = path.abspath(path.dirname(__file__))
@@ -88,6 +87,15 @@ setup(
     # Note that this is a string of words separated by whitespace, not a list.
     keywords='cryptocurrencies exchange-rates coinbase command-line-tool ',
     # Optional
+
+    # If there are data files included in your packages that need to be
+    # installed, specify them here.
+    #
+    # If using Python 2.6 or earlier, then these have to be included in
+    # MANIFEST.in as well.
+    package_data={  # Optional
+        'hodl': ['conf/*', ],
+    },
 
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
