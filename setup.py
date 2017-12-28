@@ -10,13 +10,13 @@ long_description = """
 Your friendly, no-nonsense script to instantaneously check cryptocurrency prices,
 helping you HODL one day at a time :)
 
-HODL's version is currently 1.0.0.dev1. It is currently under active development,
+HODL's version is currently 1.0.0.dev3. It is currently under active development,
 with a production version expected to be released soon.
 """
 
 setup(
     name='hodl',
-    version='1.0.0.dev1',
+    version='1.0.0.dev3',
     # You can just specify package directories manually here if your project is
     # simple. Or you can use find_packages().
     #
