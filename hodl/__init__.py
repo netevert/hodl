@@ -9,6 +9,7 @@ except ImportError:
     from urllib2 import urlopen, Request, HTTPError
 import argparse
 import json
+import os
 
 # constants
 description = """
@@ -17,8 +18,10 @@ helping you HODL one day at a time :)
 """
 
 # read config
+config_filename = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                               'conf', 'config.ini')
 config = cp.ConfigParser()
-config.read('config.ini')
+config.read(config_filename)
 
 
 def get_price(crypto="BTC", fiat=config.get("currency", "FIAT")):

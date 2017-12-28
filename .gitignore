@@ -165,4 +165,4 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-config.ini
+hodl/conf/config.ini
