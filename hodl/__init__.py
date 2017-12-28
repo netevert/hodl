@@ -45,7 +45,7 @@ def get_majors(fiat=config.get("currency", "FIAT")):
 def set_fiat(fiat):
     try:
         config.set('currency', 'FIAT', fiat)
-        with open('conf/config.ini', 'w') as configfile:
+        with open(config_filename, 'w') as configfile:
             config.write(configfile)
         return "[*] {} configured as standard fiat".format(fiat)
     except Exception as e:
