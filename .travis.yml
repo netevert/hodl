@@ -10,7 +10,8 @@ before_install:
 env:
     - TEST_DIR=tests
 script:
-    - cd $TEST_DIR && pytest test.py --cov
+    - cd $TEST_DIR && py.test test.py --cov
+    - cp .coverage ../.coverage
 after_success:
     - if [[ $ENV == python=3.6* ]]; then
           coveralls;
