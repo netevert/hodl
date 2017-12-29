@@ -11,6 +11,5 @@ env:
     - TEST_DIR=tests
 script:
     - cd $TEST_DIR && py.test test.py --cov
-    - cp .coverage ../.coverage
 after_success:
     - coveralls
