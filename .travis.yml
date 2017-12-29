@@ -6,7 +6,10 @@ python:
     - "3.6"
 before_install:
     - pip install pytest pytest-cov
+    - pip install coveralls
 env:
     - TEST_DIR=tests
 script:
     - cd $TEST_DIR && pytest test.py
+after_success:
+    - coveralls
