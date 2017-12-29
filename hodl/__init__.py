@@ -16,6 +16,7 @@ description = """
 Your friendly, no-nonsense script to instantaneously check cryptocurrency prices, 
 helping you HODL one day at a time :)
 """
+__version__ = "v.1.0.0a1"
 
 # read config
 config_filename = os.path.join(os.path.dirname(os.path.realpath(__file__)),
@@ -26,7 +27,8 @@ config.read(config_filename)
 
 def get_price(crypto="BTC", fiat=config.get("currency", "FIAT")):
     try:
-        url = 'https://api.coinbase.com/v2/prices/{}-{}/spot'.format(crypto, fiat)
+        url = 'https://api.coinbase.com/v2/prices/{}-{}/spot'.format(crypto,
+                                                                     fiat)
         req = Request(url)
         r = urlopen(req).read()
         data = json.loads(r.decode('utf-8'))
@@ -59,9 +61,12 @@ def main():
                         help='the crypto you wish to price check',
                         choices=['BTC', 'BCH', 'ETH', 'LTC'])
     group.add_argument('-f', '--fiat',
-                        help='the fiat currency you wish to use for comparison')
+                       help='the fiat currency you wish to use for comparison')
     group.add_argument('-sf', '--set_fiat',
-                        help='set your preferred fiat currency')
+                       help='set your preferred fiat currency')
+    parser.add_argument('-v', '--version', action='version',
+                        version='HODL {version}'.format(
+                            version=__version__))
     args = parser.parse_args()
 
     if args.crypto and args.fiat:

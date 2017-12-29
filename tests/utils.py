@@ -1,4 +1,5 @@
 import argparse
+import hodl
 
 
 def create_parser():
@@ -11,4 +12,7 @@ def create_parser():
                        help='the fiat currency you wish to use for comparison')
     group.add_argument('-sf', '--set_fiat',
                        help='set your preferred fiat currency')
+    parser.add_argument('-v', '--version', action='version',
+                        version='HODL {version}'.format(
+                            version=hodl.__version__))
     return parser
