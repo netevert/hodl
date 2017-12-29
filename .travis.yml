@@ -10,6 +10,6 @@ before_install:
 env:
     - TEST_DIR=tests
 script:
-    - cd $TEST_DIR && py.test test.py --cov --ignore=/home/travis/virtualenv/python2.7.14/lib/python2.7/site-packages/
+    - cd $TEST_DIR && py.test test.py --cov=tests
 after_success:
     - coveralls
