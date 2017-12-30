@@ -59,7 +59,7 @@ Bugs/Requests/Contributing
 
 Please use the `GitHub issue tracker <https://github.com/errantbot/hodl/issues>`_ to submit bugs or request features.
 
-To contribute please consult the `contribution guide <https://github.com/errantbot/hodl/blob/dev/CONTRIBUTING.md>`_
+To contribute please consult the `contribution guide <https://github.com/errantbot/hodl/blob/dev/CONTRIBUTING.md>`_.
 
 License
 -------
@@ -72,3 +72,11 @@ Versioning
 ----------
 
 This project adheres to `Semantic Versioning <http://semver.org/>`_.
+
+Donations
+----------
+
+If you like HODL and would like to donate, please send Litecoins to::
+
+    LZqLoRNHvJyuKz99mNAgVUj6M8iyEQuio9
+
