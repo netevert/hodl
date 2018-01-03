@@ -76,7 +76,7 @@ This project adheres to `Semantic Versioning <http://semver.org/>`_.
 Donations
 ----------
 
-If you like HODL, please consider donating::
+If you like HODL please consider donating::
 
     Bitcoin:  13i3hFGN1RaQqdeWqmPTMuYEj9FiJWuMWf
     Litecoin: LZqLoRNHvJyuKz99mNAgVUj6M8iyEQuio9
