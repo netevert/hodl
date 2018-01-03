@@ -13,12 +13,12 @@ import os
 
 # constants
 description = """
-Your friendly, no-nonsense script to instantaneously check cryptocurrency prices, 
+Your friendly, no-nonsense tool to instantaneously check cryptocurrency prices, 
 helping you HODL one day at a time :)
 """
 __version__ = "v.1.0.0a1"
 
-# read config
+# load config file
 config_filename = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                'conf', 'config.ini')
 config = cp.ConfigParser()
@@ -26,6 +26,7 @@ config.read(config_filename)
 
 
 def get_price(crypto="BTC", fiat=config.get("currency", "FIAT")):
+    """Returns the conversion price between the supplied crypto and fiat currencies"""
     try:
         url = 'https://api.coinbase.com/v2/prices/{}-{}/spot'.format(crypto,
                                                                      fiat)
@@ -40,11 +41,13 @@ def get_price(crypto="BTC", fiat=config.get("currency", "FIAT")):
 
 
 def get_majors(fiat=config.get("currency", "FIAT")):
+    """Returns the conversion prices for all supported crypto-currencies"""
     return [get_price(crypto, fiat) for crypto in
             ['BTC', 'BCH', 'ETH', 'LTC']]
 
 
 def set_fiat(fiat):
+    """Sets the default fiat currency for the user"""
     try:
         config.set('currency', 'FIAT', fiat)
         with open(config_filename, 'w') as configfile:
@@ -55,6 +58,7 @@ def set_fiat(fiat):
 
 
 def main():
+    """Main program entry point; parses and interprets command line arguments"""
     parser = argparse.ArgumentParser(description=description)
     group = parser.add_mutually_exclusive_group()
     parser.add_argument('-c', '--crypto',

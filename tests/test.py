@@ -3,6 +3,7 @@ from tests.utils import create_parser
 
 
 def test_get_price():
+    """Tests the output of get_price()"""
     out = hodl.get_price(crypto="BTC", fiat="USD")
     assert "1 BTC =" in out
     assert "USD" in out
@@ -13,6 +14,7 @@ def test_get_price():
 
 
 def test_get_majors():
+    """Tests the output of get_majors()"""
     out = hodl.get_majors(fiat="USD")
     assert "1 BTC =" and "USD" in out[0]
     assert "1 BCH =" and "USD" in out[1]
@@ -21,6 +23,7 @@ def test_get_majors():
 
 
 def test_set_fiat():
+    """Tests the output and behavior of set_fiat()"""
     try:
         import configparser as cp
     except ImportError:
@@ -39,6 +42,7 @@ def test_set_fiat():
 
 
 def test_main():
+    """Tests the output and behaviour of test_main()"""
     parser = create_parser()
     args = parser.parse_args(['-c', 'LTC'])
     assert args.crypto == 'LTC'

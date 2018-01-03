@@ -3,6 +3,7 @@ import hodl
 
 
 def create_parser():
+    """Creates a copy of hodl's argument parser for testing purposes"""
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group()
     parser.add_argument('-c', '--crypto',
