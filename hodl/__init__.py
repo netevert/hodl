@@ -12,10 +12,8 @@ import json
 import os
 
 # constants
-description = """
-Your friendly, no-nonsense tool to instantaneously check cryptocurrency prices, 
-helping you HODL one day at a time :)
-"""
+description = "Your friendly, no-nonsense tool to instantaneously check cryptocurrency prices"
+epilog = "hodl.py: helping you HODL one day at a time :)"
 __version__ = "v.1.0.0a1"
 
 # load config file
@@ -59,17 +57,17 @@ def set_fiat(fiat):
 
 def main():
     """Main program entry point; parses and interprets command line arguments"""
-    parser = argparse.ArgumentParser(description=description)
+    parser = argparse.ArgumentParser(prog="HODL", description=description, epilog=epilog)
     group = parser.add_mutually_exclusive_group()
     parser.add_argument('-c', '--crypto',
-                        help='the crypto you wish to price check',
+                        help='set the crypto-currency you wish to price check',
                         choices=['BTC', 'BCH', 'ETH', 'LTC'])
     group.add_argument('-f', '--fiat',
-                       help='the fiat currency you wish to use for comparison')
+                       help='set the fiat currency you wish to use for comparison')
     group.add_argument('-sf', '--set_fiat',
                        help='set your preferred fiat currency')
     parser.add_argument('-v', '--version', action='version',
-                        version='HODL {version}'.format(
+                        version='%(prog)s {version}'.format(
                             version=__version__))
     args = parser.parse_args()
 
