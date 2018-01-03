@@ -1,3 +1,7 @@
+try:
+    import configparser as cp
+except ImportError:
+    import ConfigParser as cp
 import hodl
 from tests.utils import create_parser
 
@@ -24,10 +28,6 @@ def test_get_majors():
 
 def test_set_fiat():
     """Tests the output and behavior of set_fiat()"""
-    try:
-        import configparser as cp
-    except ImportError:
-        import ConfigParser as cp
     config = cp.ConfigParser()
     config.read('../hodl/conf/config.ini')
     backup = config.get("currency", "FIAT")
@@ -39,6 +39,53 @@ def test_set_fiat():
     hodl.set_fiat(fiat=backup)
     config.read('../hodl/conf/config.ini')
     assert config.get("currency", "FIAT") == backup
+
+
+def test_record_reading():
+    """Tests the behaviour of record_reading()"""
+    config = cp.ConfigParser()
+    config.read('../hodl/conf/config.ini')
+    # get previous config value
+    previous_amount = config.get("readings", "btc")
+    test_amount = float(previous_amount) + 100
+    # set new value for testing purposes
+    hodl.record_reading("btc", str(test_amount))
+    config.read('../hodl/conf/config.ini')
+    assert config.get("readings", "btc") == str(test_amount)
+    # return to previous settings and test
+    hodl.record_reading("btc", previous_amount)
+    config.read('../hodl/conf/config.ini')
+    assert config.get("readings", "btc") == previous_amount
+
+
+def test_print_report(capfd):
+    """Tests behavious and output of print_report()"""
+    config = cp.ConfigParser()
+    config.read('../hodl/conf/config.ini')
+    # get previous config value
+    previous_amount = config.get("readings", "btc")
+    test_amount = float(previous_amount) + 100
+    # set new value for testing purposes
+    hodl.record_reading("btc", str(test_amount))
+    config.read('../hodl/conf/config.ini')
+    assert config.get("readings", "btc") == str(test_amount)
+    # test no change report
+    hodl.print_report("1 BTC = 100 USD")
+    out, err = capfd.readouterr()
+    print(out)
+    assert "no change" in out
+    # test increase report
+    hodl.print_report("1 BTC = 120 USD")
+    out, err = capfd.readouterr()
+    assert "increase" in out
+    # test decrease report
+    hodl.print_report("1 BTC = 80 USD")
+    out, err = capfd.readouterr()
+    assert "decrease" in out
+    # return to previous settings and test
+    hodl.record_reading("btc", previous_amount)
+    config.read('../hodl/conf/config.ini')
+    assert config.get("readings", "btc") == previous_amount
 
 
 def test_main():
