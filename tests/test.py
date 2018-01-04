@@ -62,9 +62,17 @@ def test_print_report(capfd):
     """Tests behavious and output of print_report()"""
     config = cp.ConfigParser()
     config.read('../hodl/conf/config.ini')
+    original_amount = config.get("readings", "btc")
+    # set testing base amount
+    try:
+        config.set("readings", "btc", str(0))
+        with open('../hodl/conf/config.ini', 'w') as configfile:
+            config.write(configfile)
+    except Exception as e:
+        print(e)
     # get previous config value
-    previous_amount = config.get("readings", "btc")
-    test_amount = float(previous_amount) + 100
+    base_amount = config.get("readings", "btc")
+    test_amount = float(base_amount) + 100
     # set new value for testing purposes
     hodl.record_reading("btc", str(test_amount))
     config.read('../hodl/conf/config.ini')
@@ -83,9 +91,9 @@ def test_print_report(capfd):
     out, err = capfd.readouterr()
     assert "decrease" in out
     # return to previous settings and test
-    hodl.record_reading("btc", previous_amount)
+    hodl.record_reading("btc", original_amount)
     config.read('../hodl/conf/config.ini')
-    assert config.get("readings", "btc") == previous_amount
+    assert config.get("readings", "btc") == original_amount
 
 
 def test_main():
