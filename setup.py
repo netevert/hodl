@@ -11,7 +11,7 @@ with open('README.rst') as fd:
 
 setup(
     name='hodl',
-    version='1.0.0.dev3',
+    version='1.0.0.a1',
     # You can just specify package directories manually here if your project is
     # simple. Or you can use find_packages().
     #
@@ -44,7 +44,7 @@ setup(
         #   3 - Alpha
         #   4 - Beta
         #   5 - Production/Stable
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
 
         # Indicate who your project is intended for
         'Intended Audience :: Developers',
@@ -80,7 +80,8 @@ setup(
     # project page. What does your project relate to?
     #
     # Note that this is a string of words separated by whitespace, not a list.
-    keywords='cryptocurrencies exchange-rates coinbase command-line-tool ',
+    keywords="cryptocurrencies exchange-rates coinbase command-line-tool hodl bitcoin bitcoin-api litecoin "
+             "litecoin-price bitcoin-price ethereum bitcoin-cash",
     # Optional
 
     # If there are data files included in your packages that need to be
