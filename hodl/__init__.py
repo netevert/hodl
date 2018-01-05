@@ -18,6 +18,7 @@ init(autoreset=True)
 description = "Your friendly, no-nonsense tool to instantaneously check cryptocurrency prices"
 epilog = "hodl.py: helping you HODL one day at a time :)"
 __version__ = "v.1.0.0a1"
+cryptos = ['btc', 'bch', 'eth', 'ltc']
 
 # load config file
 config_filename = os.path.join(os.path.dirname(os.path.realpath(__file__)),
@@ -29,7 +30,7 @@ config.read(config_filename)
 def get_price(crypto="BTC", fiat=config.get("currency", "FIAT")):
     """Returns the conversion price between the supplied crypto and fiat currencies"""
     try:
-        url = 'https://api.coinbase.com/v2/prices/{}-{}/spot'.format(crypto,
+        url = 'https://api.coinbase.com/v2/prices/{}-{}/spot'.format(crypto.upper(),
                                                                      fiat)
         req = Request(url)
         r = urlopen(req).read()
@@ -43,12 +44,13 @@ def get_price(crypto="BTC", fiat=config.get("currency", "FIAT")):
 
 def get_majors(fiat=config.get("currency", "FIAT")):
     """Returns the conversion prices for all supported crypto-currencies"""
-    return [get_price(crypto, fiat) for crypto in
-            ['BTC', 'BCH', 'ETH', 'LTC']]
+    return [get_price(crypto.upper(), fiat) for crypto in
+            cryptos]
 
 
 def set_fiat(fiat):
     """Sets the default fiat currency for the user"""
+    # todo: data sanitisation, restrict fiat to ISO 4217 codes
     try:
         config.set('currency', 'FIAT', fiat)
         with open(config_filename, 'w') as configfile:
@@ -59,15 +61,18 @@ def set_fiat(fiat):
 
 
 def record_data(section, base, amount):
-    """Helper function to save data to config.ini"""
+    """Helper function to sanitise and save data to config.ini"""
     try:
-        config.set(section, base, str(amount))
-        with open(config_filename, 'w') as configfile:
-            config.write(configfile)
-        if section == "portfolio":
-            print("[*] {} portfolio value set at {} coins".format(base.upper(), amount))
-    except Exception as e:
-        print(e)
+        if float(amount) >= 0:
+            config.set(section, base, str(amount))
+            with open(config_filename, 'w') as configfile:
+                config.write(configfile)
+            if section == "portfolio":
+                print("[*] {} portfolio value set at {} coins".format(base.upper(), amount))
+        else:
+            print("HODL: error: invalid choice: {} (please supply a positive number)".format(amount))
+    except ValueError:
+        print("HODL: error: invalid choice: {} (please supply a number)".format(amount))
 
 
 def print_portfolio_value(base=None):
@@ -87,7 +92,7 @@ def print_portfolio_value(base=None):
 
 
 def print_report(report):
-    """Prints a crypto-currency exchnge rate report"""
+    """Prints a crypto-currency exchange rate report"""
     try:
         if "[*] error, check you are using correct crypto and fiat symbols" in report:
             print(report)
@@ -117,22 +122,12 @@ def main():
     """Main program entry point; parses and interprets command line arguments"""
     parser = argparse.ArgumentParser(prog="HODL", description=description, epilog=epilog)
     group = parser.add_mutually_exclusive_group()
-    subparsers = parser.add_subparsers(title="portfolio tools", dest='choice',
-                                       description="utilities to configure and view"
-                                                   " your portfolio crypto-currency holdings")
-    portfolio_config = subparsers.add_parser("cp", help="configure portfolio command")
-    portfolio_view = subparsers.add_parser("vp", help="view portfolio command")
-    portfolio_config.add_argument('-btc', type=int, help="set your bitcoin portfolio value")
-    portfolio_view.add_argument('-btc', action='store_true', help="view your bitcoin portfolio value")
-    portfolio_config.add_argument('-bch', type=int, help="set your bitcoin cash portfolio value")
-    portfolio_view.add_argument('-bch', action='store_true', help="view your bitcoin cash portfolio value")
-    portfolio_config.add_argument('-eth', type=int, help="view your ethereum portfolio value")
-    portfolio_view.add_argument('-eth', action='store_true', help="view your ethereum portfolio value")
-    portfolio_config.add_argument('-ltc', type=int, help="set your litecoin portfolio value")
-    portfolio_view.add_argument('-ltc', action='store_true', help="view your litecoin portfolio value")
+    parser.add_argument("-cp", "--configure_portfolio", help="configure portfolio command",
+                        nargs=2, metavar=('CRYPTOCURRENCY', 'AMOUNT'))
+    parser.add_argument("-vp", "--view_portfolio", help="view portfolio command", const='all', nargs="?")
     parser.add_argument('-c', '--crypto',
                         help='set the crypto-currency you wish to price check',
-                        choices=['BTC', 'BCH', 'ETH', 'LTC'])
+                        choices=cryptos)
     group.add_argument('-f', '--fiat',
                        help='set the fiat currency you wish to use for comparison')
     group.add_argument('-sf', '--set_fiat',
@@ -151,28 +146,21 @@ def main():
         print_report(get_price(args.crypto))
     elif args.set_fiat:
         print(set_fiat(args.set_fiat))
-    elif args.choice == "cp":  # check if portfolio configuration invoked
-        if args.btc or args.btc == 0:
-            record_data("portfolio", "btc", args.btc)
-        elif args.bch or args.bch == 0:
-            record_data("portfolio", "bch", args.bch)
-        elif args.eth or args.eth == 0:
-            record_data("portfolio", "eth", args.eth)
-        elif args.ltc or args.ltc == 0:
-            record_data("portfolio", "ltc", args.ltc)
+    elif args.configure_portfolio:
+        if args.configure_portfolio[0] in cryptos:
+            record_data("portfolio", args.configure_portfolio[0], args.configure_portfolio[1])
         else:
-            portfolio_config.print_help()
-    elif args.choice == "vp":
-        if args.btc:
-            print_portfolio_value("btc")
-        elif args.bch:
-            print_portfolio_value("bch")
-        elif args.eth:
-            print_portfolio_value("eth")
-        elif args.ltc:
-            print_portfolio_value("ltc")
-        else:
+            print("HODL: error: argument -cp/--configure_portfolio: invalid choice:"
+                  " '{}' (choose from 'btc', 'bch', 'eth', 'ltc')".format(args.configure_portfolio[0]))
+    elif args.view_portfolio:
+        if args.view_portfolio == "all":
             print_portfolio_value()
+        else:
+            if args.view_portfolio in cryptos:
+                print_portfolio_value(args.view_portfolio)
+            else:
+                print("HODL: error: argument -vp/--view_portfolio: invalid choice:"
+                      " '{}' (choose from 'btc', 'bch', 'eth', 'ltc')".format(args.view_portfolio))
     else:
         for report in get_majors():
             print_report(report)

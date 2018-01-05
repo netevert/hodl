@@ -41,12 +41,12 @@ def test_set_fiat():
     assert config.get("currency", "FIAT") == backup
 
 
-def test_record_data():
+def test_record_data(capfd):
     """Tests the behaviour of record_data()"""
     # todo: test behaviour of function on "portfolio" section
     config = cp.ConfigParser()
     config.read('../hodl/conf/config.ini')
-    # get previous config value
+    # get previous config value for readings section
     previous_amount = config.get("readings", "btc")
     test_amount = float(previous_amount) + 100
     # set new value for testing purposes
@@ -57,6 +57,26 @@ def test_record_data():
     hodl.record_data("readings", "btc", previous_amount)
     config.read('../hodl/conf/config.ini')
     assert config.get("readings", "btc") == previous_amount
+    # get previous config value for portfolio section
+    previous_amount = config.get("portfolio", "btc")
+    test_amount = float(previous_amount) + 100
+    # set new value for testing purposes
+    hodl.record_data("portfolio", "btc", test_amount)
+    out, err = capfd.readouterr()
+    assert "[*] BTC portfolio value set at {} coins".format(test_amount) in out
+    config.read('../hodl/conf/config.ini')
+    assert config.get("portfolio", "btc") == str(test_amount)
+    # return to previous settings and test
+    hodl.record_data("portfolio", "btc", previous_amount)
+    config.read('../hodl/conf/config.ini')
+    assert config.get("portfolio", "btc") == previous_amount
+    # test exception handling
+    hodl.record_data("portfolio", "btc", "test")
+    out, err = capfd.readouterr()
+    assert "HODL: error: invalid choice: test (please supply a number)" in out
+    hodl.record_data("portfolio", "btc", -1)
+    out, err = capfd.readouterr()
+    assert "HODL: error: invalid choice: -1 (please supply a positive number)" in out
 
 
 def test_print_portfolio_value(capfd):
@@ -108,12 +128,14 @@ def test_print_report(capfd):
 
 
 def test_main():
-    # todo: test subparsers
     """Tests the output and behaviour of test_main()"""
     parser = create_parser()
-    args = parser.parse_args(['-c', 'LTC'])
-    assert args.crypto == 'LTC'
+    args = parser.parse_args(['-c', 'ltc'])
+    assert args.crypto == 'ltc'
     args = parser.parse_args(['-f', 'GBP'])
     assert args.fiat == 'GBP'
     args = parser.parse_args(['-sf', 'USD'])
     assert args.set_fiat == 'USD'
+    args = parser.parse_args(['-cp', 'ltc', '2'])
+    assert args.configure_portfolio[0] == 'ltc'
+    assert args.configure_portfolio[1] == "2"

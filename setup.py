@@ -22,7 +22,7 @@ setup(
     #   py_modules=["my_module"],
     #
     packages=find_packages(exclude=['contrib', 'docs', 'tests', 'venv']),
-    # Required,
+    install_requires=['colorama'],  # Required,
     url='https://github.com/errantbot/hodl',
     license='MIT',
     author='errantbot',
