@@ -6,8 +6,20 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
-with open('README.rst') as fd:
-    long_description = fd.read()
+long_description = """
+HODL is your friendly, no-nonsense tool to instantaneously check cryptocurrency
+prices on the command line, helping you HODL one day at a time :)
+
+Please visit the project's main documentation page, found at:
+https://github.com/errantbot/hodl
+
+If you like HODL please consider donating:
+
+Bitcoin:  13i3hFGN1RaQqdeWqmPTMuYEj9FiJWuMWf
+
+Litecoin: LZqLoRNHvJyuKz99mNAgVUj6M8iyEQuio9
+
+"""
 
 setup(
     name='hodl',
