@@ -63,10 +63,10 @@ def test_print_portfolio_value(capfd):
     config = cp.ConfigParser()
     config.read('../hodl/conf/config.ini')
     holding = float(config.get("portfolio", "btc")) * float(config.get("readings", "btc"))
-    test_statement = "[*] {} portfolio value: ".format("btc") + "{0:.2f} USD".format(holding)
+    test_statement = "[*] {} portfolio value: ".format("BTC") + "{0:.2f} USD\n".format(holding)
     hodl.print_portfolio_value("btc")
     out, err = capfd.readouterr()
-    assert test_statement in out
+    assert test_statement == out
 
 
 def test_print_report(capfd):
