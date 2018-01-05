@@ -58,14 +58,32 @@ def set_fiat(fiat):
         return "[*] error while configuring fiat, report: ", e
 
 
-def record_reading(base, amount):
-    """Saves the crypto-currency exchange value supplied to config.ini"""
+def record_data(section, base, amount):
+    """Helper function to save data to config.ini"""
     try:
-        config.set("readings", base, amount)
+        config.set(section, base, str(amount))
         with open(config_filename, 'w') as configfile:
             config.write(configfile)
+        if section == "portfolio":
+            print("[*] {} portfolio value set at {} coins".format(base.upper(), amount))
     except Exception as e:
         print(e)
+
+
+def print_portfolio_value(base=None):
+    """Prints the value of the user's portfolio holdings"""
+    portfolio_currency = config.get("currency", "FIAT")
+    if base:
+        holding = float(config.get("portfolio", base)) * float(config.get("readings", base))
+        print("[*] {} portfolio value: ".format(base) +
+              "{0:.2f} ".format(holding) +
+              "{}".format(portfolio_currency))
+    else:
+        for base in ["btc", "bch", "eth", "ltc"]:
+            holding = float(config.get("portfolio", base)) * float(config.get("readings", base))
+            print("[*] {} portfolio value: ".format(base) +
+                  "{0:.2f} ".format(holding) +
+                  "{}".format(portfolio_currency))
 
 
 def print_report(report):
@@ -80,21 +98,34 @@ def print_report(report):
         if current_amount > previous_amount:
             change = Fore.GREEN + "{0:.2f}% increase".format(100.0 * current_amount / previous_amount - 100)
             print(report + change)
-            record_reading(base, str(current_amount))
+            record_data("readings", base, str(current_amount))
         elif current_amount < previous_amount:
             change = Fore.RED + "{0:.2f}% decrease".format(100.0 * current_amount / previous_amount - 100)
             print(report + change)
-            record_reading(base, str(current_amount))
+            record_data("readings", base, str(current_amount))
         elif current_amount == previous_amount:
             change = Fore.YELLOW + "no change"
             print(report + change)
-            record_reading(base, str(current_amount))
+            record_data("readings", base, str(current_amount))
 
 
 def main():
     """Main program entry point; parses and interprets command line arguments"""
     parser = argparse.ArgumentParser(prog="HODL", description=description, epilog=epilog)
     group = parser.add_mutually_exclusive_group()
+    subparsers = parser.add_subparsers(title="portfolio tools", dest='choice',
+                                       description="utilities to configure and view"
+                                                   " your portfolio crypto-currency holdings")
+    portfolio_config = subparsers.add_parser("cp", help="configure portfolio command")
+    portfolio_view = subparsers.add_parser("vp", help="view portfolio command")
+    portfolio_config.add_argument('-btc', type=int, help="set your bitcoin portfolio value")
+    portfolio_view.add_argument('-btc', action='store_true', help="view your bitcoin portfolio value")
+    portfolio_config.add_argument('-bch', type=int, help="set your bitcoin cash portfolio value")
+    portfolio_view.add_argument('-bch', action='store_true', help="view your bitcoin cash portfolio value")
+    portfolio_config.add_argument('-eth', type=int, help="view your ethereum portfolio value")
+    portfolio_view.add_argument('-eth', action='store_true', help="view your ethereum portfolio value")
+    portfolio_config.add_argument('-ltc', type=int, help="set your litecoin portfolio value")
+    portfolio_view.add_argument('-ltc', action='store_true', help="view your litecoin portfolio value")
     parser.add_argument('-c', '--crypto',
                         help='set the crypto-currency you wish to price check',
                         choices=['BTC', 'BCH', 'ETH', 'LTC'])
@@ -116,6 +147,28 @@ def main():
         print_report(get_price(args.crypto))
     elif args.set_fiat:
         print(set_fiat(args.set_fiat))
+    elif args.choice == "cp":  # check if portfolio configuration invoked
+        if args.btc or args.btc == 0:
+            record_data("portfolio", "btc", args.btc)
+        elif args.bch or args.bch == 0:
+            record_data("portfolio", "bch", args.bch)
+        elif args.eth or args.eth == 0:
+            record_data("portfolio", "eth", args.eth)
+        elif args.ltc or args.ltc == 0:
+            record_data("portfolio", "ltc", args.ltc)
+        else:
+            portfolio_config.print_help()
+    elif args.choice == "vp":
+        if args.btc:
+            print_portfolio_value("btc")
+        elif args.bch:
+            print_portfolio_value("bch")
+        elif args.eth:
+            print_portfolio_value("eth")
+        elif args.ltc:
+            print_portfolio_value("ltc")
+        else:
+            print_portfolio_value()
     else:
         for report in get_majors():
             print_report(report)

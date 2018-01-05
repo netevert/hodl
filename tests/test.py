@@ -41,21 +41,32 @@ def test_set_fiat():
     assert config.get("currency", "FIAT") == backup
 
 
-def test_record_reading():
-    """Tests the behaviour of record_reading()"""
+def test_record_data():
+    """Tests the behaviour of record_data()"""
+    # todo: test behaviour of function on "portfolio" section
     config = cp.ConfigParser()
     config.read('../hodl/conf/config.ini')
     # get previous config value
     previous_amount = config.get("readings", "btc")
     test_amount = float(previous_amount) + 100
     # set new value for testing purposes
-    hodl.record_reading("btc", str(test_amount))
+    hodl.record_data("readings", "btc", str(test_amount))
     config.read('../hodl/conf/config.ini')
     assert config.get("readings", "btc") == str(test_amount)
     # return to previous settings and test
-    hodl.record_reading("btc", previous_amount)
+    hodl.record_data("readings", "btc", previous_amount)
     config.read('../hodl/conf/config.ini')
     assert config.get("readings", "btc") == previous_amount
+
+
+def test_print_portfolio_value(capfd):
+    config = cp.ConfigParser()
+    config.read('../hodl/conf/config.ini')
+    holding = float(config.get("portfolio", "btc")) * float(config.get("readings", "btc"))
+    test_statement = "[*] {} portfolio value: ".format("btc") + "{0:.2f} USD".format(holding)
+    hodl.print_portfolio_value("btc")
+    out, err = capfd.readouterr()
+    assert test_statement in out
 
 
 def test_print_report(capfd):
@@ -74,7 +85,7 @@ def test_print_report(capfd):
     base_amount = config.get("readings", "btc")
     test_amount = float(base_amount) + 100
     # set new value for testing purposes
-    hodl.record_reading("btc", str(test_amount))
+    hodl.record_data("readings", "btc", str(test_amount))
     config.read('../hodl/conf/config.ini')
     assert config.get("readings", "btc") == str(test_amount)
     # test no change report
@@ -91,12 +102,13 @@ def test_print_report(capfd):
     out, err = capfd.readouterr()
     assert "decrease" in out
     # return to previous settings and test
-    hodl.record_reading("btc", original_amount)
+    hodl.record_data("readings", "btc", original_amount)
     config.read('../hodl/conf/config.ini')
     assert config.get("readings", "btc") == original_amount
 
 
 def test_main():
+    # todo: test subparsers
     """Tests the output and behaviour of test_main()"""
     parser = create_parser()
     args = parser.parse_args(['-c', 'LTC'])
