@@ -53,7 +53,7 @@ Convert the price for a single cryptocurrency against your preferred fiat curren
 
 View total value of portfolio holdings::
 
-    C:\>hodl vp
+    C:\>hodl -vp
     [*] BTC portfolio value: 123475.20 USD
     [*] BCH portfolio value: 234.15 USD
     [*] ETH portfolio value: 672.00 USD
@@ -61,7 +61,7 @@ View total value of portfolio holdings::
 
 Configure portfolio holdings::
 
-    C:\hodl cp -btc 15
+    C:\hodl -cp btc 15
     [*] BTC portfolio value set at 15 coins
 
 **HODL is under active development**, consult the `GitHub issue tracker <https://github.com/errantbot/hodl/issues>`_ to

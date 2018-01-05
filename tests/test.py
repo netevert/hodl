@@ -43,7 +43,6 @@ def test_set_fiat():
 
 def test_record_data(capfd):
     """Tests the behaviour of record_data()"""
-    # todo: test behaviour of function on "portfolio" section
     config = cp.ConfigParser()
     config.read('../hodl/conf/config.ini')
     # get previous config value for readings section
