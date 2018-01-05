@@ -75,38 +75,42 @@ def print_portfolio_value(base=None):
     portfolio_currency = config.get("currency", "FIAT")
     if base:
         holding = float(config.get("portfolio", base)) * float(config.get("readings", base))
-        print("[*] {} portfolio value: ".format(base) +
+        print("[*] {} portfolio value: ".format(base.upper()) +
               "{0:.2f} ".format(holding) +
               "{}".format(portfolio_currency))
     else:
         for base in ["btc", "bch", "eth", "ltc"]:
             holding = float(config.get("portfolio", base)) * float(config.get("readings", base))
-            print("[*] {} portfolio value: ".format(base) +
+            print("[*] {} portfolio value: ".format(base.upper()) +
                   "{0:.2f} ".format(holding) +
                   "{}".format(portfolio_currency))
 
 
 def print_report(report):
     """Prints a crypto-currency exchnge rate report"""
-    if "[*] error, check you are using correct crypto and fiat symbols" in report:
-        print(report)
-    else:
+    try:
+        if "[*] error, check you are using correct crypto and fiat symbols" in report:
+            print(report)
+        else:
+            base = report.split("=")[0].split(" ")[1]
+            current_amount = float(report.split("=")[1].split(" ")[1])
+            # recover cached record
+            previous_amount = float(config.get("readings", base.upper()))
+            if current_amount > previous_amount:
+                change = Fore.GREEN + "{0:.2f}% increase".format(100.0 * current_amount / previous_amount - 100)
+                print(report + change)
+            elif current_amount < previous_amount:
+                change = Fore.RED + "{0:.2f}% decrease".format(100.0 * current_amount / previous_amount - 100)
+                print(report + change)
+            elif current_amount == previous_amount:
+                change = Fore.YELLOW + "no change"
+                print(report + change)
+            record_data("readings", base, str(current_amount))
+    except ZeroDivisionError:
         base = report.split("=")[0].split(" ")[1]
         current_amount = float(report.split("=")[1].split(" ")[1])
-        # recover cached record
-        previous_amount = float(config.get("readings", base.upper()))
-        if current_amount > previous_amount:
-            change = Fore.GREEN + "{0:.2f}% increase".format(100.0 * current_amount / previous_amount - 100)
-            print(report + change)
-            record_data("readings", base, str(current_amount))
-        elif current_amount < previous_amount:
-            change = Fore.RED + "{0:.2f}% decrease".format(100.0 * current_amount / previous_amount - 100)
-            print(report + change)
-            record_data("readings", base, str(current_amount))
-        elif current_amount == previous_amount:
-            change = Fore.YELLOW + "no change"
-            print(report + change)
-            record_data("readings", base, str(current_amount))
+        record_data("readings", base, str(current_amount))
+        print_report(report=report)
 
 
 def main():

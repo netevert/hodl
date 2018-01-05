@@ -51,6 +51,19 @@ Convert the price for a single cryptocurrency against your preferred fiat curren
     C:\>hodl -c LTC -f CHF
     1 LTC = 227.56 CHF | -2.51% decrease
 
+View total value of portfolio holdings::
+
+    C:\>hodl vp
+    [*] BTC portfolio value: 123475.20 USD
+    [*] BCH portfolio value: 234.15 USD
+    [*] ETH portfolio value: 672.00 USD
+    [*] LTC portfolio value: 120.05 USD
+
+Configure portfolio holdings::
+
+    C:\hodl cp -btc 15
+    [*] BTC portfolio value set at 15 coins
+
 **HODL is under active development**, consult the `GitHub issue tracker <https://github.com/errantbot/hodl/issues>`_ to
 check what's in the development pipeline.
 
