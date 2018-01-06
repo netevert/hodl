@@ -52,9 +52,9 @@ def get_price(crypto="BTC", fiat=config.get("currency", "FIAT")):
         req = Request(url)
         r = urlopen(req).read()
         data = json.loads(r.decode('utf-8'))
-        return "1 {} = {} {} | ".format(data['data']['base'],
-                                        data['data']['amount'],
-                                        data['data']['currency'])
+        return "1 {} = {} {}".format(data['data']['base'],
+                                     data['data']['amount'],
+                                     data['data']['currency'])
     except HTTPError:
         return "[*] error, check you are using correct crypto and fiat symbols"
 
@@ -108,8 +108,9 @@ def print_portfolio_value(base=None):
                   "{}".format(portfolio_currency))
 
 
-def print_report(report):
+def print_report(report, alignment):
     """Prints a crypto-currency exchange rate report"""
+    i = alignment - len(report) + 2
     try:
         if "[*] error, check you are using correct crypto and fiat symbols" in report:
             print(report)
@@ -119,20 +120,22 @@ def print_report(report):
             # recover cached record
             previous_amount = float(config.get("readings", base.upper()))
             if current_amount > previous_amount:
-                change = Fore.GREEN + "{0:.2f}% increase".format(100.0 * current_amount / previous_amount - 100)
+                change = Fore.GREEN + " ".rjust(i) + "{0:.2f}% increase".format(
+                    100.0 * current_amount / previous_amount - 100)
                 print(report + change)
             elif current_amount < previous_amount:
-                change = Fore.RED + "{0:.2f}% decrease".format(100.0 * current_amount / previous_amount - 100)
+                change = Fore.RED + " ".rjust(i) + "{0:.2f}% decrease".format(
+                    100.0 * current_amount / previous_amount - 100)
                 print(report + change)
             elif current_amount == previous_amount:
-                change = Fore.YELLOW + "no change"
+                change = Fore.YELLOW + " ".rjust(i) + "no change"
                 print(report + change)
             record_data("readings", base, str(current_amount))
     except ZeroDivisionError:
         base = report.split("=")[0].split(" ")[1]
         current_amount = float(report.split("=")[1].split(" ")[1])
         record_data("readings", base, str(current_amount))
-        print_report(report=report)
+        print_report(report=report, alignment=i)
 
 
 def main():
@@ -141,7 +144,7 @@ def main():
     group = parser.add_mutually_exclusive_group()
     group_2 = parser.add_mutually_exclusive_group()
     group_2.add_argument("-cp", "--configure_portfolio", help="configure portfolio command",
-                        nargs=2, metavar=('CRYPTOCURRENCY', 'AMOUNT'))
+                         nargs=2, metavar=('CRYPTOCURRENCY', 'AMOUNT'))
     group_2.add_argument("-vp", "--view_portfolio", help="view portfolio command", const='all', nargs="?")
     parser.add_argument('-c', '--crypto',
                         help='set the crypto-currency you wish to price check',
@@ -160,12 +163,15 @@ def main():
     args = parser.parse_args()
 
     if args.crypto and args.fiat:
-        print_report(get_price(args.crypto, args.fiat))
+        report = get_price(args.crypto, args.fiat)
+        print_report(report, len(report))
     elif (args.set_fiat and args.crypto) or (args.crypto and args.set_fiat):
         print(set_fiat(args.set_fiat))
-        print_report(get_price(args.crypto))
+        report = get_price(args.crypto)
+        print_report(report, len(report))
     elif args.crypto:
-        print_report(get_price(args.crypto))
+        report = get_price(args.crypto)
+        print_report(report, len(report))
     elif args.set_fiat:
         print(set_fiat(args.set_fiat))
     elif args.configure_portfolio:
@@ -184,8 +190,14 @@ def main():
                 print("HODL: error: argument -vp/--view_portfolio: invalid choice:"
                       " '{}' (choose from 'btc', 'bch', 'eth', 'ltc')".format(args.view_portfolio))
     else:
-        for report in get_majors():
-            print_report(report)
+        reports = get_majors()
+        i = len(max(reports, key=len))
+        b = max(reports, key=len)
+        for report in reports:
+            if report == b:
+                print_report(report, i)
+            else:
+                print_report(report, i)
 
 
 if __name__ == '__main__':
