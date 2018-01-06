@@ -77,7 +77,7 @@ To contribute please consult the `contribution guide <https://github.com/errantb
 License
 -------
 
-Distributed under the terms of the `MIT`_ license, pytest is free and open source software.
+Distributed under the terms of the `MIT`_ license, HODL is free and open source software.
 
 .. _`MIT`: https://github.com/errantbot/hodl/blob/master/LICENSE.txt
 
