@@ -23,7 +23,7 @@ Litecoin: LZqLoRNHvJyuKz99mNAgVUj6M8iyEQuio9
 
 setup(
     name='hodl',
-    version='1.0.0.a1',
+    version='1.0.0.b1',
     # You can just specify package directories manually here if your project is
     # simple. Or you can use find_packages().
     #
@@ -39,7 +39,7 @@ setup(
     license='MIT',
     author='errantbot',
     author_email='errantbot@tutanota.com',
-    description='A  friendly, no-nonsense script to instantaneously check '
+    description='A  friendly, no-nonsense tool to instantaneously check '
                 'cryptocurrency prices.',
     # This is an optional longer description of your project that represents
     # the body of text which users will see when they visit PyPI.

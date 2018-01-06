@@ -1,9 +1,11 @@
-try:
-    import configparser as cp
-except ImportError:
-    import ConfigParser as cp
 import hodl
+import pytest
 from tests.utils import create_parser
+import sys
+if sys.version_info[0] < 3:
+    import ConfigParser as cp
+else:
+    import configparser as cp
 
 
 def test_get_price():
@@ -94,12 +96,9 @@ def test_print_report(capfd):
     config.read('../hodl/conf/config.ini')
     original_amount = config.get("readings", "btc")
     # set testing base amount
-    try:
-        config.set("readings", "btc", str(0))
-        with open('../hodl/conf/config.ini', 'w') as configfile:
-            config.write(configfile)
-    except Exception as e:
-        print(e)
+    config.set("readings", "btc", str(0))
+    with open('../hodl/conf/config.ini', 'w') as configfile:
+        config.write(configfile)
     # get previous config value
     base_amount = config.get("readings", "btc")
     test_amount = float(base_amount) + 100
@@ -138,3 +137,12 @@ def test_main():
     args = parser.parse_args(['-cp', 'ltc', '2'])
     assert args.configure_portfolio[0] == 'ltc'
     assert args.configure_portfolio[1] == "2"
+    # test incorrect values
+    with pytest.raises(ValueError):
+        parser.parse_args(['-f', 'fake_code'])
+    with pytest.raises(ValueError):
+        parser.parse_args(['-sf', 'fake_code'])
+    with pytest.raises(ValueError):
+        parser.parse_args(['-c', 'fake_code'])
+    with pytest.raises(ValueError):
+        parser.parse_args(["-sf", "USD", "-f", "USD"])
