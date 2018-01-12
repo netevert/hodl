@@ -107,16 +107,16 @@ def test_print_report(capfd):
     config.read('../hodl/conf/config.ini')
     assert config.get("readings", "btc") == str(test_amount)
     # test no change report
-    hodl.print_report("1 BTC = 100 USD")
+    hodl.print_report("1 BTC = 100 USD", alignment=1)
     out, err = capfd.readouterr()
     print(out)
     assert "no change" in out
     # test increase report
-    hodl.print_report("1 BTC = 120 USD")
+    hodl.print_report("1 BTC = 120 USD", alignment=1)
     out, err = capfd.readouterr()
     assert "increase" in out
     # test decrease report
-    hodl.print_report("1 BTC = 80 USD")
+    hodl.print_report("1 BTC = 80 USD", alignment=1)
     out, err = capfd.readouterr()
     assert "decrease" in out
     # return to previous settings and test
