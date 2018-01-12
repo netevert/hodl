@@ -12,18 +12,11 @@ prices on the command line, helping you HODL one day at a time :)
 
 Please visit the project's main documentation page, found at:
 https://github.com/errantbot/hodl
-
-If you like HODL please consider donating:
-
-Bitcoin:  13i3hFGN1RaQqdeWqmPTMuYEj9FiJWuMWf
-
-Litecoin: LZqLoRNHvJyuKz99mNAgVUj6M8iyEQuio9
-
 """
 
 setup(
     name='hodl',
-    version='1.0.0.b1',
+    version='1.0.0b1',
     # You can just specify package directories manually here if your project is
     # simple. Or you can use find_packages().
     #
@@ -56,7 +49,7 @@ setup(
         #   3 - Alpha
         #   4 - Beta
         #   5 - Production/Stable
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
 
         # Indicate who your project is intended for
         'Intended Audience :: Developers',

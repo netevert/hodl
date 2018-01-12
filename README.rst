@@ -21,10 +21,10 @@ prices on the command line, helping you HODL one day at a time :)
 Running HODL is easy::
 
     C:\>hodl
-    1 BTC = 14960.63 USD | -0.05% decrease
-    1 BCH = 2362.93 USD | 0.00% increase
-    1 ETH = 953.00 USD | 0.15% increase
-    1 LTC = 233.41 USD | 0.10% increase
+    1 BTC = 13507.09 USD  -0.14% decrease
+    1 BCH = 2519.86 USD   0.23% increase
+    1 ETH = 1229.74 USD   no change
+    1 LTC = 231.01 USD    -0.15% decrease
 
 Installation
 ------------
@@ -43,13 +43,13 @@ Set preferred conversion currency::
 
 View price for a single cryptocurrency::
 
-    C:\>hodl -c BTC
-    1 BTC = 14953.41 USD | -0.05% decrease
+    C:\>hodl -c btc
+    1 BTC = 13500.01 USD  -0.05% decrease
 
 Convert the price for a single cryptocurrency against your preferred fiat currency::
 
-    C:\>hodl -c LTC -f CHF
-    1 LTC = 227.56 CHF | -2.51% decrease
+    C:\>hodl -c ltc -f CHF
+    1 LTC = 223.93 CHF  -3.06% decrease
 
 View total value of portfolio holdings::
 
