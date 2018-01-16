@@ -16,7 +16,7 @@ https://github.com/errantbot/hodl
 
 setup(
     name='hodl',
-    version='1.0.0b1',
+    version='1.0.0',
     # You can just specify package directories manually here if your project is
     # simple. Or you can use find_packages().
     #
@@ -49,7 +49,7 @@ setup(
         #   3 - Alpha
         #   4 - Beta
         #   5 - Production/Stable
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
 
         # Indicate who your project is intended for
         'Intended Audience :: Developers',
