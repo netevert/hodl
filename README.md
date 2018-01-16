@@ -12,11 +12,7 @@ time :)
 
 Running HODL is easy:
 
-    C:\>hodl
-    1 BTC = 13507.09 USD  -0.14% decrease
-    1 BCH = 2519.86 USD   0.23% increase
-    1 ETH = 1229.74 USD   no change
-    1 LTC = 231.01 USD    -0.15% decrease
+![Demo](https://github.com/errantbot/hodl/blob/dev/docs/demo.gif)
 
 Installation
 ============
