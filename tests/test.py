@@ -1,11 +1,7 @@
 import hodl
 import pytest
 from tests.utils import create_parser
-import sys
-if sys.version_info[0] < 3:
-    import ConfigParser as cp
-else:
-    import configparser as cp
+import configparser as cp
 
 
 def test_get_price():
