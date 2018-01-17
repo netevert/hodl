@@ -43,6 +43,23 @@ config_filename = os.path.join(os.path.dirname(os.path.realpath(__file__)),
 config = cp.ConfigParser()
 config.read(config_filename)
 
+def convert_crypto(frm="LTC", to="BTC"):
+    """Returns the conversion price from one cypto to another"""
+    try:
+        url = "https://api.binance.com/api/v3/ticker/price?symbol={}{}".format(frm.upper(), to.upper())
+        req = Request(url)
+        r = urlopen(req).read()
+        data = json.loads(r.decode("utf-8"))
+        return "1 {} = {} {}".format(frm.upper(), data["price"], to.upper())
+    except HTTPError:
+        try:
+            url = "https://api.binance.com/api/v3/ticker/price?symbol={}{}".format(to.upper(), frm.upper())
+            req = Request(url)
+            r = urlopen(req).read()
+            data = json.loads(r.decode("utf-8"))
+            return "1 {} = {} {}".format(frm.upper(), 1.0/float(data["price"]), to.upper())
+        except HTTPError:
+            return "[*] error, check you are using correct crypto symbols"
 
 def get_price(crypto="BTC", fiat=config.get("currency", "FIAT")):
     """Returns the conversion price between the supplied crypto and fiat currencies"""
@@ -160,6 +177,10 @@ def main():
     parser.add_argument('-v', '--version', action='version',
                         version='%(prog)s {version}'.format(
                             version=__version__))
+    parser.add_argument('-cc', '--convert_crypto',
+                        help="convert one crypto to another",
+                        choices=cryptos,
+                        nargs=2)
     args = parser.parse_args()
 
     if args.crypto and args.fiat:
@@ -189,6 +210,13 @@ def main():
             else:
                 print("HODL: error: argument -vp/--view_portfolio: invalid choice:"
                       " '{}' (choose from 'btc', 'bch', 'eth', 'ltc')".format(args.view_portfolio))
+    elif args.convert_crypto:
+        if args.convert_crypto[0] in cryptos and args.convert_crypto[1] in cryptos:
+            print(convert_crypto(args.convert_crypto[0], args.convert_crypto[1]))
+        else:
+            print("HODL: error: argument -cc/--convert_crypto: invalid choice:"
+                  " '{}' (choose from 'btc', 'bch', 'eth', 'ltc')".format(args.view_portfolio))
+
     else:
         reports = get_majors()
         i = len(max(reports, key=len))
