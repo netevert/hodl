@@ -3,6 +3,15 @@ import pytest
 from tests.utils import create_parser
 import configparser as cp
 
+def test_convert_crypto():
+    """Tests the output of convert_crypto"""
+    out = hodl.convert_crypto(frm="LTC", to="BTC")
+    assert "1 LTC =" in out
+    assert "BTC" in out
+    # test HTTPError handling
+    out = hodl.convert_crypto(frm="ABC", to="DEF")
+    assert "[*] error, check you are using " \
+           "correct crypto symbols" in out
 
 def test_get_price():
     """Tests the output of get_price()"""
