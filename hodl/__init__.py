@@ -43,8 +43,9 @@ config_filename = os.path.join(os.path.dirname(os.path.realpath(__file__)),
 config = cp.ConfigParser()
 config.read(config_filename)
 
-def convert_crypto(frm="LTC", to="BTC"):
-    """Returns the conversion price from one cypto to another"""
+
+def binance_convert_crypto(frm="LTC", to="BTC"):
+    """Returns the conversion price from one cypto to another using the binance API"""
     try:
         url = "https://api.binance.com/api/v3/ticker/price?symbol={}{}".format(frm.upper(), to.upper())
         req = Request(url)
@@ -57,7 +58,7 @@ def convert_crypto(frm="LTC", to="BTC"):
             req = Request(url)
             r = urlopen(req).read()
             data = json.loads(r.decode("utf-8"))
-            return "1 {} = {} {}".format(frm.upper(), 1.0/float(data["price"]), to.upper())
+            return "1 {} = {} {}".format(frm.upper(), 1.0 / float(data["price"]), to.upper())
         except HTTPError:
             return "[*] error, check you are using correct crypto symbols"
 
