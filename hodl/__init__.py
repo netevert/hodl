@@ -62,6 +62,24 @@ def binance_convert_crypto(frm="LTC", to="BTC"):
         except HTTPError:
             return "[*] error, check you are using correct crypto symbols"
 
+
+def coinbase_convert_crypto(frm="LTC", to="BTC"):
+    """Returns the conversion price between the supplied crypto and fiat currencies using the coinbase API"""
+    try:
+        url = "https://api.coinbase.com/v2/prices/{}-{}/spot"
+        req = Request(url.format(frm.upper(), "USD"))
+        r = urlopen(req).read()
+        data = json.loads(r.decode("utf-8"))
+        frm_price = float(data["data"]["amount"])
+        req = Request(url.format(to.upper(), "USD"))
+        r = urlopen(req).read()
+        data = json.loads(r.decode("utf-8"))
+        to_price = float(data["data"]["amount"])
+        return "1 {} = {} {}".format(frm.upper(), round(frm_price / to_price, 8), to.upper())
+    except HTTPError:
+        return "[*] error, check you are using correct crypto symbols"
+
+
 def get_price(crypto="BTC", fiat=config.get("currency", "FIAT")):
     """Returns the conversion price between the supplied crypto and fiat currencies"""
     try:
@@ -213,7 +231,7 @@ def main():
                       " '{}' (choose from 'btc', 'bch', 'eth', 'ltc')".format(args.view_portfolio))
     elif args.convert_crypto:
         if args.convert_crypto[0] in cryptos and args.convert_crypto[1] in cryptos:
-            print(convert_crypto(args.convert_crypto[0], args.convert_crypto[1]))
+            print(coinbase_convert_crypto(args.convert_crypto[0], args.convert_crypto[1]))
         else:
             print("HODL: error: argument -cc/--convert_crypto: invalid choice:"
                   " '{}' (choose from 'btc', 'bch', 'eth', 'ltc')".format(args.view_portfolio))
