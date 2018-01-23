@@ -10,6 +10,7 @@ except ImportError:
 import argparse
 from colorama import init, Fore
 import json
+from moneywagon import get_current_price
 import os
 
 init(autoreset=True)
@@ -17,24 +18,40 @@ init(autoreset=True)
 # constants
 description = "Your friendly, no-nonsense tool to instantaneously check cryptocurrency prices"
 epilog = "hodl.py: helping you HODL one day at a time :)"
-__version__ = "v.1.0.0a1"
-cryptos = ['btc', 'bch', 'eth', 'ltc']
-iso4217codes = ["AED", "AFN", "ALL", "AMD", "ANG", "AOA", "ARS", "AUD", "AWG", "AZN",
-                "BAM", "BBD", "BDT", "BGN", "BHD", "BIF", "BMD", "BND", "BOB", "BRL",
-                "BSD", "BTN", "BWP", "BYN", "BZD", "CAD", "CDF", "CHF", "CLP", "CNY",
-                "COP", "CRC", "CUC", "CUP", "CVE", "CZK", "DJF", "DKK", "DOP", "DZD",
-                "EGP", "ERN", "ETB", "EUR", "FJD", "FKP", "GBP", "GEL", "GGP", "GHS",
-                "GIP", "GMD", "GNF", "GTQ", "GYD", "HKD", "HNL", "HRK", "HTG", "HUF",
-                "IDR", "ILS", "IMP", "INR", "IQD", "IRR", "ISK", "JEP", "JMD", "JOD",
-                "JPY", "KES", "KGS", "KHR", "KMF", "KPW", "KRW", "KWD", "KYD", "KZT",
-                "LAK", "LBP", "LKR", "LRD", "LSL", "LYD", "MAD", "MDL", "MGA", "MKD",
-                "MMK", "MNT", "MOP", "MRO", "MUR", "MVR", "MWK", "MXN", "MYR", "MZN",
-                "NAD", "NGN", "NIO", "NOK", "NPR", "NZD", "OMR", "PAB", "PEN", "PGK",
-                "PHP", "PKR", "PLN", "PYG", "QAR", "RON", "RSD", "RUB", "RWF", "SAR",
-                "SBD", "SCR", "SDG", "SEK", "SGD", "SHP", "SLL", "SOS", "SPL", "SRD",
-                "STD", "SVC", "SYP", "SZL", "THB", "TJS", "TMT", "TND", "TOP", "TRY",
-                "TTD", "TVD", "TWD", "TZS", "UAH", "UGX", "USD", "UYU", "UZS", "VEF",
-                "VND", "VUV", "WST", "XAF", "XCD", "XDR", "XOF", "XPF", "YER", "ZAR",
+__version__ = "v.1.1.0"
+cryptos = ['btc', 'bch', 'eth', 'ltc', 'xmr', 'xrp']
+iso4217codes = ["AED", "AFN", "ALL", "AMD", "ANG", "AOA", "ARS", "AUD", "AWG",
+                "AZN",
+                "BAM", "BBD", "BDT", "BGN", "BHD", "BIF", "BMD", "BND", "BOB",
+                "BRL",
+                "BSD", "BTN", "BWP", "BYN", "BZD", "CAD", "CDF", "CHF", "CLP",
+                "CNY",
+                "COP", "CRC", "CUC", "CUP", "CVE", "CZK", "DJF", "DKK", "DOP",
+                "DZD",
+                "EGP", "ERN", "ETB", "EUR", "FJD", "FKP", "GBP", "GEL", "GGP",
+                "GHS",
+                "GIP", "GMD", "GNF", "GTQ", "GYD", "HKD", "HNL", "HRK", "HTG",
+                "HUF",
+                "IDR", "ILS", "IMP", "INR", "IQD", "IRR", "ISK", "JEP", "JMD",
+                "JOD",
+                "JPY", "KES", "KGS", "KHR", "KMF", "KPW", "KRW", "KWD", "KYD",
+                "KZT",
+                "LAK", "LBP", "LKR", "LRD", "LSL", "LYD", "MAD", "MDL", "MGA",
+                "MKD",
+                "MMK", "MNT", "MOP", "MRO", "MUR", "MVR", "MWK", "MXN", "MYR",
+                "MZN",
+                "NAD", "NGN", "NIO", "NOK", "NPR", "NZD", "OMR", "PAB", "PEN",
+                "PGK",
+                "PHP", "PKR", "PLN", "PYG", "QAR", "RON", "RSD", "RUB", "RWF",
+                "SAR",
+                "SBD", "SCR", "SDG", "SEK", "SGD", "SHP", "SLL", "SOS", "SPL",
+                "SRD",
+                "STD", "SVC", "SYP", "SZL", "THB", "TJS", "TMT", "TND", "TOP",
+                "TRY",
+                "TTD", "TVD", "TWD", "TZS", "UAH", "UGX", "USD", "UYU", "UZS",
+                "VEF",
+                "VND", "VUV", "WST", "XAF", "XCD", "XDR", "XOF", "XPF", "YER",
+                "ZAR",
                 "ZMW", "ZWD"]
 
 # load config file
@@ -47,18 +64,21 @@ config.read(config_filename)
 def binance_convert_crypto(frm="LTC", to="BTC"):
     """Returns the conversion price from one cypto to another using the binance API"""
     try:
-        url = "https://api.binance.com/api/v3/ticker/price?symbol={}{}".format(frm.upper(), to.upper())
+        url = "https://api.binance.com/api/v3/ticker/price?symbol={}{}".format(
+            frm.upper(), to.upper())
         req = Request(url)
         r = urlopen(req).read()
         data = json.loads(r.decode("utf-8"))
         return "1 {} = {} {}".format(frm.upper(), data["price"], to.upper())
     except HTTPError:
         try:
-            url = "https://api.binance.com/api/v3/ticker/price?symbol={}{}".format(to.upper(), frm.upper())
+            url = "https://api.binance.com/api/v3/ticker/price?symbol={}{}".format(
+                to.upper(), frm.upper())
             req = Request(url)
             r = urlopen(req).read()
             data = json.loads(r.decode("utf-8"))
-            return "1 {} = {} {}".format(frm.upper(), 1.0 / float(data["price"]), to.upper())
+            return "1 {} = {} {}".format(frm.upper(),
+                                         1.0 / float(data["price"]), to.upper())
         except HTTPError:
             return "[*] error, check you are using correct crypto symbols"
 
@@ -75,22 +95,29 @@ def coinbase_convert_crypto(frm="LTC", to="BTC"):
         r = urlopen(req).read()
         data = json.loads(r.decode("utf-8"))
         to_price = float(data["data"]["amount"])
-        return "1 {} = {} {}".format(frm.upper(), round(frm_price / to_price, 8), to.upper())
+        return "1 {} = {} {}".format(frm.upper(),
+                                     round(frm_price / to_price, 8), to.upper())
     except HTTPError:
-        return "[*] error, check you are using correct crypto symbols"
+        return "[*] error, check that you are using correct crypto symbols"
 
 
 def get_price(crypto="BTC", fiat=config.get("currency", "FIAT")):
     """Returns the conversion price between the supplied crypto and fiat currencies"""
     try:
-        url = 'https://api.coinbase.com/v2/prices/{}-{}/spot'.format(crypto.upper(),
-                                                                     fiat)
-        req = Request(url)
-        r = urlopen(req).read()
-        data = json.loads(r.decode('utf-8'))
-        return "1 {} = {} {}".format(data['data']['base'],
-                                     data['data']['amount'],
-                                     data['data']['currency'])
+        if crypto in ['btc', 'bch', 'eth', 'ltc']:
+            url = 'https://api.coinbase.com/v2/prices/{}-{}/spot'.format(
+                crypto.upper(),
+                fiat)
+            req = Request(url)
+            r = urlopen(req).read()
+            data = json.loads(r.decode('utf-8'))
+            return "1 {} = {} {}".format(data['data']['base'],
+                                         data['data']['amount'],
+                                         data['data']['currency'])
+        else:
+            return "1 {} = {} {}".format(crypto,
+                                         str(get_current_price(crypto, fiat)),
+                                         fiat)
     except HTTPError:
         return "[*] error, check you are using correct crypto and fiat symbols"
 
@@ -121,24 +148,30 @@ def record_data(section, base, amount):
             with open(config_filename, 'w') as configfile:
                 config.write(configfile)
             if section == "portfolio":
-                print("[*] {} portfolio value set at {} coins".format(base.upper(), amount))
+                print("[*] {} portfolio value set at {} coins".format(
+                    base.upper(), amount))
         else:
-            print("HODL: error: invalid choice: {} (please supply a positive number)".format(amount))
+            print(
+                "HODL: error: invalid choice: {} (please supply a positive number)".format(
+                    amount))
     except ValueError:
-        print("HODL: error: invalid choice: {} (please supply a number)".format(amount))
+        print("HODL: error: invalid choice: {} (please supply a number)".format(
+            amount))
 
 
 def print_portfolio_value(base=None):
     """Prints the value of the user's portfolio holdings"""
     portfolio_currency = config.get("currency", "FIAT")
     if base:
-        holding = float(config.get("portfolio", base)) * float(config.get("readings", base))
+        holding = float(config.get("portfolio", base)) * float(
+            config.get("readings", base))
         print("[*] {} portfolio value: ".format(base.upper()) +
               "{0:.2f} ".format(holding) +
               "{}".format(portfolio_currency))
     else:
-        for base in ["btc", "bch", "eth", "ltc"]:
-            holding = float(config.get("portfolio", base)) * float(config.get("readings", base))
+        for base in cryptos:
+            holding = float(config.get("portfolio", base)) * float(
+                config.get("readings", base))
             print("[*] {} portfolio value: ".format(base.upper()) +
                   "{0:.2f} ".format(holding) +
                   "{}".format(portfolio_currency))
@@ -176,12 +209,15 @@ def print_report(report, alignment):
 
 def main():
     """Main program entry point; parses and interprets command line arguments"""
-    parser = argparse.ArgumentParser(prog="HODL", description=description, epilog=epilog)
+    parser = argparse.ArgumentParser(prog="HODL", description=description,
+                                     epilog=epilog)
     group = parser.add_mutually_exclusive_group()
     group_2 = parser.add_mutually_exclusive_group()
-    group_2.add_argument("-cp", "--configure_portfolio", help="configure portfolio command",
+    group_2.add_argument("-cp", "--configure_portfolio",
+                         help="configure portfolio command",
                          nargs=2, metavar=('CRYPTOCURRENCY', 'AMOUNT'))
-    group_2.add_argument("-vp", "--view_portfolio", help="view portfolio command", const='all', nargs="?")
+    group_2.add_argument("-vp", "--view_portfolio",
+                         help="view portfolio command", const='all', nargs="?")
     parser.add_argument('-c', '--crypto',
                         help='set the crypto-currency you wish to price check',
                         choices=cryptos)
@@ -216,10 +252,13 @@ def main():
         print(set_fiat(args.set_fiat))
     elif args.configure_portfolio:
         if args.configure_portfolio[0] in cryptos:
-            record_data("portfolio", args.configure_portfolio[0], args.configure_portfolio[1])
+            record_data("portfolio", args.configure_portfolio[0],
+                        args.configure_portfolio[1])
         else:
-            print("HODL: error: argument -cp/--configure_portfolio: invalid choice:"
-                  " '{}' (choose from 'btc', 'bch', 'eth', 'ltc')".format(args.configure_portfolio[0]))
+            print(
+                "HODL: error: argument -cp/--configure_portfolio: invalid choice:"
+                " '{}' (choose from {})".format(
+                    args.configure_portfolio[0], [str(crypto) for crypto in cryptos]))
     elif args.view_portfolio:
         if args.view_portfolio == "all":
             print_portfolio_value()
@@ -227,14 +266,19 @@ def main():
             if args.view_portfolio in cryptos:
                 print_portfolio_value(args.view_portfolio)
             else:
-                print("HODL: error: argument -vp/--view_portfolio: invalid choice:"
-                      " '{}' (choose from 'btc', 'bch', 'eth', 'ltc')".format(args.view_portfolio))
+                print(
+                    "HODL: error: argument -vp/--view_portfolio: invalid choice:"
+                    " '{}' (choose from {})".format(
+                        args.view_portfolio, [str(crypto) for crypto in cryptos]))
     elif args.convert_crypto:
-        if args.convert_crypto[0] in cryptos and args.convert_crypto[1] in cryptos:
-            print(coinbase_convert_crypto(args.convert_crypto[0], args.convert_crypto[1]))
+        if args.convert_crypto[0] in cryptos \
+                and args.convert_crypto[1] in cryptos:
+            print(coinbase_convert_crypto(args.convert_crypto[0],
+                                          args.convert_crypto[1]))
         else:
             print("HODL: error: argument -cc/--convert_crypto: invalid choice:"
-                  " '{}' (choose from 'btc', 'bch', 'eth', 'ltc')".format(args.view_portfolio))
+                  " '{}' (choose from {})".format(
+                args.view_portfolio, [str(crypto) for crypto in cryptos]))
 
     else:
         reports = get_majors()

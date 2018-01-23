@@ -23,6 +23,13 @@ To install HODL run:
 
 Features
 ========
+Currencies supported:
+- Bitcoin ([BTC](https://bitcoin.org/en/))
+- Bitcoin Cash ([BCH](https://www.bitcoincash.org/))
+- Ethereum ([ETH](https://www.ethereum.org/))
+- Litecoin ([LTC](https://litecoin.com/))
+- Monero ([XMR](https://getmonero.org/))
+- Ripple ([XRP](https://ripple.com/))
 
 Set preferred conversion currency:
 
@@ -37,6 +44,11 @@ View price for a single cryptocurrency:
 Convert the price for a single cryptocurrency against your preferred
 fiat currency:
 
+    C:\>hodl -cc btc ltc
+    1 BTC = 61.36111727 LTC
+
+Convert the price for a single cryptocurrency against another cryptocurrency:
+
     C:\>hodl -c ltc -f CHF
     1 LTC = 223.93 CHF  -3.06% decrease
 
@@ -47,6 +59,8 @@ View total value of portfolio holdings:
     [*] BCH portfolio value: 234.15 USD
     [*] ETH portfolio value: 672.00 USD
     [*] LTC portfolio value: 120.05 USD
+    [*] XMR portfolio value: 1122.43 USD
+    [*] XRP portfolio value: 0.00 USD
 
 Configure portfolio holdings:
 
