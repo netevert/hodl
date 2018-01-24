@@ -10,13 +10,14 @@ except ImportError:
 import argparse
 from colorama import init, Fore
 import json
-from moneywagon import get_current_price
+from moneywagon import get_current_price, CurrencyNotSupported
 import os
 
 init(autoreset=True)
 
 # constants
-description = "Your friendly, no-nonsense tool to instantaneously check cryptocurrency prices"
+description = "Your friendly, no-nonsense tool to " \
+              "instantaneously check cryptocurrency prices"
 epilog = "hodl.py: helping you HODL one day at a time :)"
 __version__ = "v.1.1.0"
 cryptos = ['btc', 'bch', 'eth', 'ltc', 'xmr', 'xrp']
@@ -62,7 +63,8 @@ config.read(config_filename)
 
 
 def binance_convert_crypto(frm="LTC", to="BTC"):
-    """Returns the conversion price from one cypto to another using the binance API"""
+    """Returns the conversion price from one cypto to another
+    using the binance API"""
     try:
         url = "https://api.binance.com/api/v3/ticker/price?symbol={}{}".format(
             frm.upper(), to.upper())
@@ -72,8 +74,8 @@ def binance_convert_crypto(frm="LTC", to="BTC"):
         return "1 {} = {} {}".format(frm.upper(), data["price"], to.upper())
     except HTTPError:
         try:
-            url = "https://api.binance.com/api/v3/ticker/price?symbol={}{}".format(
-                to.upper(), frm.upper())
+            url = "https://api.binance.com/api/v3/" \
+                  "ticker/price?symbol={}{}".format(to.upper(), frm.upper())
             req = Request(url)
             r = urlopen(req).read()
             data = json.loads(r.decode("utf-8"))
@@ -84,25 +86,34 @@ def binance_convert_crypto(frm="LTC", to="BTC"):
 
 
 def coinbase_convert_crypto(frm="LTC", to="BTC"):
-    """Returns the conversion price between the supplied crypto and fiat currencies using the coinbase API"""
+    """Returns the conversion price between the supplied crypto
+    and fiat currencies using the coinbase API"""
     try:
-        url = "https://api.coinbase.com/v2/prices/{}-{}/spot"
-        req = Request(url.format(frm.upper(), "USD"))
-        r = urlopen(req).read()
-        data = json.loads(r.decode("utf-8"))
-        frm_price = float(data["data"]["amount"])
-        req = Request(url.format(to.upper(), "USD"))
-        r = urlopen(req).read()
-        data = json.loads(r.decode("utf-8"))
-        to_price = float(data["data"]["amount"])
-        return "1 {} = {} {}".format(frm.upper(),
-                                     round(frm_price / to_price, 8), to.upper())
-    except HTTPError:
+        if frm in ['btc', 'bch', 'eth', 'ltc'] and \
+                to in ['btc', 'bch', 'eth', 'ltc']:
+            url = "https://api.coinbase.com/v2/prices/{}-{}/spot"
+            req = Request(url.format(frm.upper(), "USD"))
+            r = urlopen(req).read()
+            data = json.loads(r.decode("utf-8"))
+            frm_price = float(data["data"]["amount"])
+            req = Request(url.format(to.upper(), "USD"))
+            r = urlopen(req).read()
+            data = json.loads(r.decode("utf-8"))
+            to_price = float(data["data"]["amount"])
+            return "1 {} = {} {}".format(frm.upper(),
+                                         round(frm_price /
+                                               to_price, 8), to.upper())
+        else:
+            return "1 {} = {} {}".format(frm.upper(),
+                                         str(get_current_price(frm, to)),
+                                         to.upper())
+    except (HTTPError, CurrencyNotSupported):
         return "[*] error, check that you are using correct crypto symbols"
 
 
 def get_price(crypto="BTC", fiat=config.get("currency", "FIAT")):
-    """Returns the conversion price between the supplied crypto and fiat currencies"""
+    """Returns the conversion price between the supplied
+    crypto and fiat currencies"""
     try:
         if crypto in ['btc', 'bch', 'eth', 'ltc']:
             url = 'https://api.coinbase.com/v2/prices/{}-{}/spot'.format(
@@ -118,7 +129,7 @@ def get_price(crypto="BTC", fiat=config.get("currency", "FIAT")):
             return "1 {} = {} {}".format(crypto,
                                          str(get_current_price(crypto, fiat)),
                                          fiat)
-    except HTTPError:
+    except (HTTPError, CurrencyNotSupported):
         return "[*] error, check you are using correct crypto and fiat symbols"
 
 
@@ -152,7 +163,8 @@ def record_data(section, base, amount):
                     base.upper(), amount))
         else:
             print(
-                "HODL: error: invalid choice: {} (please supply a positive number)".format(
+                "HODL: error: invalid choice: {} "
+                "(please supply a positive number)".format(
                     amount))
     except ValueError:
         print("HODL: error: invalid choice: {} (please supply a number)".format(
@@ -177,34 +189,40 @@ def print_portfolio_value(base=None):
                   "{}".format(portfolio_currency))
 
 
-def print_report(report, alignment):
+def print_report(report, alignment=0, first_run=False):
     """Prints a crypto-currency exchange rate report"""
     i = alignment - len(report) + 2
     try:
-        if "[*] error, check you are using correct crypto and fiat symbols" in report:
+        if "[*] error, check you are using correct " \
+           "crypto and fiat symbols" in report:
             print(report)
         else:
             base = report.split("=")[0].split(" ")[1]
             current_amount = float(report.split("=")[1].split(" ")[1])
             # recover cached record
             previous_amount = float(config.get("readings", base.upper()))
-            if current_amount > previous_amount:
+            if current_amount > previous_amount and not first_run:
                 change = Fore.GREEN + " ".rjust(i) + "{0:.2f}% increase".format(
                     100.0 * current_amount / previous_amount - 100)
                 print(report + change)
-            elif current_amount < previous_amount:
+            elif current_amount < previous_amount and not first_run:
                 change = Fore.RED + " ".rjust(i) + "{0:.2f}% decrease".format(
                     100.0 * current_amount / previous_amount - 100)
                 print(report + change)
-            elif current_amount == previous_amount:
+            elif current_amount == previous_amount and not first_run:
                 change = Fore.YELLOW + " ".rjust(i) + "no change"
                 print(report + change)
+            elif first_run:
+                print(report)
             record_data("readings", base, str(current_amount))
     except ZeroDivisionError:
+        # all readings in the config are set to 0, meaning the user is running
+        # the script for the first time. We can thus skip calculating the
+        # percentage change in the report by setting first_run to True
         base = report.split("=")[0].split(" ")[1]
         current_amount = float(report.split("=")[1].split(" ")[1])
         record_data("readings", base, str(current_amount))
-        print_report(report=report, alignment=i)
+        print_report(report=report, first_run=True)
 
 
 def main():
@@ -222,7 +240,7 @@ def main():
                         help='set the crypto-currency you wish to price check',
                         choices=cryptos)
     group.add_argument('-f', '--fiat',
-                       help='set the fiat currency you wish to use for comparison',
+                       help='set fiat conversion currency',
                        choices=iso4217codes,
                        metavar="ISO 4217 CODE")
     group.add_argument('-sf', '--set_fiat',
@@ -283,12 +301,8 @@ def main():
     else:
         reports = get_majors()
         i = len(max(reports, key=len))
-        b = max(reports, key=len)
         for report in reports:
-            if report == b:
-                print_report(report, i)
-            else:
-                print_report(report, i)
+            print_report(report, i)
 
 
 if __name__ == '__main__':

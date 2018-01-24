@@ -3,6 +3,7 @@ import pytest
 from tests.utils import create_parser
 import configparser as cp
 
+
 def test_binance_convert_crypto():
     """Tests the output of binance_convert_crypto"""
     out = hodl.binance_convert_crypto(frm="LTC", to="BTC")
@@ -13,20 +14,27 @@ def test_binance_convert_crypto():
     assert "[*] error, check you are using " \
            "correct crypto symbols" in out
 
+
 def test_coinbase_convert_crypto():
     """Tests the output of coinbase_convert_crypto"""
     out = hodl.coinbase_convert_crypto(frm="LTC", to="BTC")
     assert "1 LTC =" in out
     assert "BTC" in out
+    out = hodl.coinbase_convert_crypto(frm="xrp", to="xmr")
+    assert "1 XRP =" in out
+    assert "XMR" in out
     # test HTTPError handling
     out = hodl.coinbase_convert_crypto(frm="ABC", to="DEF")
-    assert "[*] error, check you are using " \
-           "correct crypto symbols" in out
+    assert '[*] error, check that you are using correct crypto symbols' in out
+
 
 def test_get_price():
     """Tests the output of get_price()"""
     out = hodl.get_price(crypto="BTC", fiat="USD")
     assert "1 BTC =" in out
+    assert "USD" in out
+    out = hodl.get_price(crypto="XRP", fiat="USD")
+    assert "1 XRP =" in out
     assert "USD" in out
     # test HTTPError handling
     out = hodl.get_price(crypto="ABC")
