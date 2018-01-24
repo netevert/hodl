@@ -49,6 +49,8 @@ def test_get_majors():
     assert "1 BCH =" and "USD" in out[1]
     assert "1 ETH =" and "USD" in out[2]
     assert "1 LTC =" and "USD" in out[3]
+    assert "1 LTC =" and "USD" in out[4]
+    assert "1 LTC =" and "USD" in out[5]
 
 
 def test_set_fiat():
