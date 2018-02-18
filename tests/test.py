@@ -6,7 +6,7 @@ import configparser as cp
 
 def test_binance_convert_crypto():
     """Tests the output of binance_convert_crypto"""
-    out = hodl.binance_convert_crypto(frm="LTC", to="BTC")
+    out = hodl.binance_convert_crypto(frm="ltc", to="BTC")
     assert "1 LTC =" in out
     assert "BTC" in out
     # test HTTPError handling
@@ -17,7 +17,7 @@ def test_binance_convert_crypto():
 
 def test_coinbase_convert_crypto():
     """Tests the output of coinbase_convert_crypto"""
-    out = hodl.coinbase_convert_crypto(frm="LTC", to="BTC")
+    out = hodl.coinbase_convert_crypto(frm="ltc", to="btc")
     assert "1 LTC =" in out
     assert "BTC" in out
     out = hodl.coinbase_convert_crypto(frm="xrp", to="xmr")
@@ -25,21 +25,27 @@ def test_coinbase_convert_crypto():
     assert "XMR" in out
     # test HTTPError handling
     out = hodl.coinbase_convert_crypto(frm="ABC", to="DEF")
-    assert '[*] error, check that you are using correct crypto symbols' in out
+    assert '[*] error, check you are using correct crypto symbols' in out
 
 
 def test_get_price():
     """Tests the output of get_price()"""
-    out = hodl.get_price(crypto="BTC", fiat="USD")
+    out = hodl.get_price(crypto="btc", fiat="USD")
     assert "1 BTC =" in out
     assert "USD" in out
-    out = hodl.get_price(crypto="XRP", fiat="USD")
+    out = hodl.get_price(crypto="xrp", fiat="USD")
     assert "1 XRP =" in out
     assert "USD" in out
     # test HTTPError handling
     out = hodl.get_price(crypto="ABC")
     assert "[*] error, check you are using " \
            "correct crypto and fiat symbols" in out
+
+
+def test_get_crypto_price():
+    """Tests the output of get_crypto_price()"""
+    out = hodl.get_crypto_price('xrp', 'usd')
+    assert type(out) == float
 
 
 def test_get_majors():
@@ -135,15 +141,15 @@ def test_print_report(capfd):
     hodl.print_report("1 BTC = 100 USD", alignment=1)
     out, err = capfd.readouterr()
     print(out)
-    assert "no change" in out
+    assert "\x1b[37m \x1b[44m" in out  # tests output color is blue
     # test increase report
     hodl.print_report("1 BTC = 120 USD", alignment=1)
     out, err = capfd.readouterr()
-    assert "increase" in out
+    assert "\x1b[37m \x1b[42m" in out  # tests output color is green
     # test decrease report
     hodl.print_report("1 BTC = 80 USD", alignment=1)
     out, err = capfd.readouterr()
-    assert "decrease" in out
+    assert "\x1b[37m \x1b[41m" in out  # tests output color is red
     # return to previous settings and test
     hodl.record_data("readings", "btc", original_amount)
     config.read('../hodl/conf/config.ini')

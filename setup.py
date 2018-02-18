@@ -16,7 +16,7 @@ https://github.com/errantbot/hodl
 
 setup(
     name='hodl',
-    version='1.0.0',
+    version='1.1.0',
     # You can just specify package directories manually here if your project is
     # simple. Or you can use find_packages().
     #
@@ -27,7 +27,11 @@ setup(
     #   py_modules=["my_module"],
     #
     packages=find_packages(exclude=['contrib', 'docs', 'tests', 'venv']),
-    install_requires=['colorama'],  # Required,
+    install_requires=[
+        'colorama',
+        'futures'
+    ],  # Required,
+
     url='https://github.com/errantbot/hodl',
     license='MIT',
     author='errantbot',

@@ -8,9 +8,9 @@ except ImportError:
     import ConfigParser as cp
     from urllib2 import urlopen, Request, HTTPError
 import argparse
-from colorama import init, Fore
+from colorama import init, Fore, Back
+from concurrent.futures import ThreadPoolExecutor
 import json
-from moneywagon import get_current_price, CurrencyNotSupported
 import os
 
 init(autoreset=True)
@@ -105,9 +105,9 @@ def coinbase_convert_crypto(frm="LTC", to="BTC"):
                                                to_price, 8), to.upper())
         else:
             return "1 {} = {} {}".format(frm.upper(),
-                                         str(get_current_price(frm, to)),
+                                         str(binance_convert_crypto(frm, to)),
                                          to.upper())
-    except (HTTPError, CurrencyNotSupported):
+    except (HTTPError, IndexError):
         return "[*] error, check that you are using correct crypto symbols"
 
 
@@ -126,17 +126,32 @@ def get_price(crypto="BTC", fiat=config.get("currency", "FIAT")):
                                          data['data']['amount'],
                                          data['data']['currency'])
         else:
-            return "1 {} = {} {}".format(crypto,
-                                         str(get_current_price(crypto, fiat)),
-                                         fiat)
-    except (HTTPError, CurrencyNotSupported):
+            return "1 {0} = {1:.2f} {2}".format(crypto.upper(),
+                                                get_crypto_price(crypto, fiat),
+                                                fiat)
+    except (HTTPError, IndexError):
         return "[*] error, check you are using correct crypto and fiat symbols"
+
+
+def get_crypto_price(crypto, fiat):
+    """Helper function to convert any cryptocurrency to fiat"""
+    converted_btc_value = float(binance_convert_crypto(
+        crypto, "BTC").split('=')[1].strip().split()[0])
+
+    # grab latest bitcoin price
+    btc_price = float(get_price("btc", fiat).split('=')[1].strip().split()[0])
+    # converted_btc_value * latest reading
+    return converted_btc_value * btc_price
 
 
 def get_majors(fiat=config.get("currency", "FIAT")):
     """Returns the conversion prices for all supported crypto-currencies"""
-    return [get_price(crypto.upper(), fiat) for crypto in
-            cryptos]
+    reports = []
+    with ThreadPoolExecutor(max_workers=6) as executor:
+        for crypto in cryptos:
+            future = executor.submit(get_price, crypto.lower(), fiat)
+            reports.append(future.result())
+    return reports
 
 
 def set_fiat(fiat):
@@ -202,15 +217,17 @@ def print_report(report, alignment=0, first_run=False):
             # recover cached record
             previous_amount = float(config.get("readings", base.upper()))
             if current_amount > previous_amount and not first_run:
-                change = Fore.GREEN + " ".rjust(i) + "{0:.2f}% increase".format(
+                change = Fore.WHITE + " ".rjust(
+                    i) + Back.GREEN + " {0:.2f}%".format(
                     100.0 * current_amount / previous_amount - 100)
                 print(report + change)
             elif current_amount < previous_amount and not first_run:
-                change = Fore.RED + " ".rjust(i) + "{0:.2f}% decrease".format(
+                change = Fore.WHITE + " ".rjust(
+                    i) + Back.RED + "{0:.2f}%".format(
                     100.0 * current_amount / previous_amount - 100)
                 print(report + change)
             elif current_amount == previous_amount and not first_run:
-                change = Fore.YELLOW + " ".rjust(i) + "no change"
+                change = Fore.WHITE + " ".rjust(i) + Back.BLUE + " 0.00%"
                 print(report + change)
             elif first_run:
                 print(report)
@@ -276,7 +293,8 @@ def main():
             print(
                 "HODL: error: argument -cp/--configure_portfolio: invalid choice:"
                 " '{}' (choose from {})".format(
-                    args.configure_portfolio[0], [str(crypto) for crypto in cryptos]))
+                    args.configure_portfolio[0],
+                    [str(crypto) for crypto in cryptos]))
     elif args.view_portfolio:
         if args.view_portfolio == "all":
             print_portfolio_value()
@@ -287,7 +305,8 @@ def main():
                 print(
                     "HODL: error: argument -vp/--view_portfolio: invalid choice:"
                     " '{}' (choose from {})".format(
-                        args.view_portfolio, [str(crypto) for crypto in cryptos]))
+                        args.view_portfolio,
+                        [str(crypto) for crypto in cryptos]))
     elif args.convert_crypto:
         if args.convert_crypto[0] in cryptos \
                 and args.convert_crypto[1] in cryptos:
