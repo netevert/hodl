@@ -5,7 +5,7 @@
 [![PyPI](https://img.shields.io/pypi/pyversions/hodl.svg)](https://pypi.python.org/pypi/hodl)
 [![Build Status](https://travis-ci.org/errantbot/hodl.svg?branch=master)](https://travis-ci.org/errantbot/hodl)
 [![Coverage Status](https://coveralls.io/repos/github/errantbot/hodl/badge.svg?branch=master)](https://coveralls.io/github/errantbot/hodl?branch=master)
-[![Donations](https://img.shields.io/badge/donate-bitcoin-orange.svg?logo=bitcoin)](https://github.com/errantbot/hodl/tree/dev#donations)
+[![Donations](https://img.shields.io/badge/donate-bitcoin-orange.svg?logo=bitcoin)](https://github.com/errantbot/hodl/tree/master#donations)
 
 HODL is your friendly, no-nonsense tool to instantaneously check
 cryptocurrency prices on the command line, helping you HODL one day at a
