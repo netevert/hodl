@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - XRP support
 - Crypto to crypto exchange rates
 - Multi-threading to speed up price retrieval
+- Interim project icon
 
 ### Changed
 - Colorized output: colorized background in price data for more intuitive reading

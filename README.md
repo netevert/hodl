@@ -1,5 +1,5 @@
-HODL
-====
+![Icon](https://github.com/errantbot/hodl/blob/dev/docs/icon.png)
+=================================================================
 [![PyPI](https://img.shields.io/pypi/v/hodl.svg)](https://pypi.python.org/pypi/hodl)
 [![PyPI](https://img.shields.io/pypi/status/hodl.svg)](https://pypi.python.org/pypi/hodl)
 [![PyPI](https://img.shields.io/pypi/pyversions/hodl.svg)](https://pypi.python.org/pypi/hodl)
@@ -12,7 +12,7 @@ time :)
 
 Running HODL is easy:
 
-![Demo](https://github.com/errantbot/hodl/blob/dev/docs/demo.gif)
+![Demo](https://github.com/errantbot/hodl/blob/master/docs/demo.gif)
 
 Installation
 ============

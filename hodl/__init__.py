@@ -9,11 +9,9 @@ except ImportError:
     from urllib2 import urlopen, Request, HTTPError
 import argparse
 from colorama import init, Fore, Back
-from concurrent.futures import ThreadPoolExecutor
 import json
+from multiprocessing.pool import ThreadPool
 import os
-
-init(autoreset=True)
 
 # constants
 description = "Your friendly, no-nonsense tool to " \
@@ -60,6 +58,10 @@ config_filename = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                'conf', 'config.ini')
 config = cp.ConfigParser()
 config.read(config_filename)
+
+# initialise colorama and thread pool
+init(autoreset=True)
+pool = ThreadPool(processes=6)
 
 
 def binance_convert_crypto(frm="LTC", to="BTC"):
@@ -147,10 +149,9 @@ def get_crypto_price(crypto, fiat):
 def get_majors(fiat=config.get("currency", "FIAT")):
     """Returns the conversion prices for all supported crypto-currencies"""
     reports = []
-    with ThreadPoolExecutor(max_workers=6) as executor:
-        for crypto in cryptos:
-            future = executor.submit(get_price, crypto.lower(), fiat)
-            reports.append(future.result())
+    for crypto in cryptos:
+        async_result = pool.apply_async(get_price, (crypto.lower(), fiat,))
+        reports.append(async_result.get())
     return reports
 
 
