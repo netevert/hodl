@@ -12,11 +12,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Crypto to crypto exchange rates
 - Multi-threading to speed up price retrieval
 - Interim project icon
+- Donations badge
 
 ### Changed
 - Colorized output: colorized background in price data for more intuitive reading
 - Updated setup.py
 - Updated requirements.txt
+- Updated demo GIF
 
 ### Removed
 - Verbose price reports
