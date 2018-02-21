@@ -1,5 +1,6 @@
 ![Icon](https://github.com/errantbot/hodl/blob/dev/docs/icon.png)
 =================================================================
+[![Maintenance](https://img.shields.io/maintenance/yes/2018.svg)]()
 [![PyPI](https://img.shields.io/pypi/v/hodl.svg)](https://pypi.python.org/pypi/hodl)
 [![PyPI](https://img.shields.io/pypi/status/hodl.svg)](https://pypi.python.org/pypi/hodl)
 [![PyPI](https://img.shields.io/pypi/pyversions/hodl.svg)](https://pypi.python.org/pypi/hodl)
