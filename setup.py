@@ -16,7 +16,7 @@ https://github.com/errantbot/hodl
 
 setup(
     name='hodl',
-    version='1.1.0',
+    version='1.1.1',
     # You can just specify package directories manually here if your project is
     # simple. Or you can use find_packages().
     #

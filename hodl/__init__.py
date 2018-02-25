@@ -10,6 +10,7 @@ except ImportError:
 import argparse
 from colorama import init, Fore, Back
 import json
+from multiprocessing import Process
 from multiprocessing.pool import ThreadPool
 import os
 
@@ -61,7 +62,7 @@ config.read(config_filename)
 
 # initialise colorama and thread pool
 init(autoreset=True)
-pool = ThreadPool(processes=6)
+pool = ThreadPool(processes=10)
 
 
 def binance_convert_crypto(frm="LTC", to="BTC"):
@@ -155,16 +156,27 @@ def get_majors(fiat=config.get("currency", "FIAT")):
     return reports
 
 
+def adjust_readings_to_new_fiat(fiat):
+    """Helper function to bulk update readings in the configuration file when
+    a new default fiat is set"""
+    for data in get_majors(fiat):
+        record_data('readings',
+                    data.split('=')[0].strip().split(' ')[1].lower(),
+                    data.split('=')[1].strip().split()[0])
+    print("[*] success: {} configured as standard fiat".format(fiat))
+
+
 def set_fiat(fiat):
     """Sets the default fiat currency for the user"""
-    # todo: data sanitisation, restrict fiat to ISO 4217 codes
     try:
+        print("[*] updating standard fiat to {} ...".format(fiat))
+        thread = Process(target=adjust_readings_to_new_fiat, args=(fiat,))
+        thread.start()
         config.set('currency', 'FIAT', fiat)
         with open(config_filename, 'w') as configfile:
             config.write(configfile)
-        return "[*] {} configured as standard fiat".format(fiat)
     except Exception as e:
-        return "[*] error while configuring fiat, report: ", e
+        print("[*] error: while configuring fiat: report: ", e)
 
 
 def record_data(section, base, amount):
@@ -275,17 +287,15 @@ def main():
     args = parser.parse_args()
 
     if args.crypto and args.fiat:
-        report = get_price(args.crypto, args.fiat)
-        print_report(report, len(report))
+        print(get_price(args.crypto, args.fiat))
     elif (args.set_fiat and args.crypto) or (args.crypto and args.set_fiat):
-        print(set_fiat(args.set_fiat))
+        set_fiat(args.set_fiat)
         report = get_price(args.crypto)
         print_report(report, len(report))
     elif args.crypto:
-        report = get_price(args.crypto)
-        print_report(report, len(report))
+        print(get_price(args.crypto))
     elif args.set_fiat:
-        print(set_fiat(args.set_fiat))
+        set_fiat(args.set_fiat)
     elif args.configure_portfolio:
         if args.configure_portfolio[0] in cryptos:
             record_data("portfolio", args.configure_portfolio[0],

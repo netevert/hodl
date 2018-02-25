@@ -12,6 +12,7 @@ HODL is your friendly, no-nonsense tool to instantaneously check
 cryptocurrency prices on the command line, helping you HODL one day at a
 time :)
 
+
 Running HODL is easy:
 
 ![Demo](https://github.com/errantbot/hodl/blob/master/docs/demo.gif)

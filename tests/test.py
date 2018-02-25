@@ -59,14 +59,15 @@ def test_get_majors():
     assert "1 XRP =" and "USD" in out[5]
 
 
-def test_set_fiat():
+def test_set_fiat(capfd):
     """Tests the output and behavior of set_fiat()"""
     config = cp.ConfigParser()
     config.read('../hodl/conf/config.ini')
     backup = config.get("currency", "FIAT")
-    out = hodl.set_fiat(fiat="CHF")
+    hodl.set_fiat(fiat="CHF")
+    out, err = capfd.readouterr()
     config.read('../hodl/conf/config.ini')
-    assert "[*] CHF configured as standard fiat" in out
+    assert "[*] updating standard fiat to CHF ..." in out
     assert config.get("currency", "FIAT") == "CHF"
     # return to previous settings and test
     hodl.set_fiat(fiat=backup)
@@ -177,3 +178,6 @@ def test_main():
         parser.parse_args(['-c', 'fake_code'])
     with pytest.raises(ValueError):
         parser.parse_args(["-sf", "USD", "-f", "USD"])
+
+# todo: write adjust_readings_to_new_fiat tests
+# fixme: tests do not reset readings to zero
