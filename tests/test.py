@@ -59,6 +59,13 @@ def test_get_majors():
     assert "1 XRP =" and "USD" in out[5]
 
 
+def test_adjust_readings_to_new_fiat(capfd):
+    """Tests the output of adjust_readings_to_new_fiat"""
+    hodl.adjust_readings_to_new_fiat('EUR')
+    out, err = capfd.readouterr()
+    assert "[*] success: EUR configured as standard fiat" in out
+
+
 def test_set_fiat(capfd):
     """Tests the output and behavior of set_fiat()"""
     config = cp.ConfigParser()
@@ -178,6 +185,3 @@ def test_main():
         parser.parse_args(['-c', 'fake_code'])
     with pytest.raises(ValueError):
         parser.parse_args(["-sf", "USD", "-f", "USD"])
-
-# todo: write adjust_readings_to_new_fiat tests
-# fixme: tests do not reset readings to zero
