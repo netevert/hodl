@@ -7,11 +7,17 @@ Please note we have a [code of conduct](https://github.com/errantbot/hodl/blob/m
 
 ## Pull Request Process
 
-1. Ensure any install or build dependencies are removed before the end of the layer when doing a
+1. To submit a successful Pull Request ensure your improvement aligns with the following guidelines:
+ - The project has a preference for minimal reliance on external python packages. Try to aim for solutions
+ that do not rely on external python packages. Only code improvements that
+ have a well-reasoned and justified need for external package reliance will be accepted.
+ - Each new function added must be accompanied by related tests to ensure successful build passes and 100% code coverage.
+ - Code improvements must be python 2 and 3 compatible.
+2. Ensure any install or build dependencies are removed before the end of the layer when doing a
    build.
-2. Update the README.md with details of changes to the interface, this includes new environment
+3. Update the README.md and CHANGELOG.md with details of changes to the interface, this includes new environment
    variables, exposed ports, useful file locations and container parameters.
-3. Increase the version numbers in any examples files and the README.md to the new version that this
+4. Increase the version numbers in any examples files, the README.md and CHANGELOG.md to the new version that this
    Pull Request would represent. The versioning scheme we use is [SemVer](http://semver.org/).
-4. You may merge the Pull Request in once you have the sign-off of two other developers, or if you
-   do not have permission to do that, you may request the second reviewer to merge it for you.
+5. You may merge the Pull Request in once you have the sign-off of the project owner, or if you
+   do not have permission to do that, you may request the project owner to merge it for you.

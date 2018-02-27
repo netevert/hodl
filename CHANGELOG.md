@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Maintenance status badge on README.md
 
+### Changed
+- Updated changelog
+- Updated contribution guide
+
+### Fixed
+- Fixed bug that caused incorrect price change percentage reports to be
+displayed when fiat currency is changed
+
 ## [1.1.0] - 2018-02-18
 ### Added
 - Changelog file
