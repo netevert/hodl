@@ -10,7 +10,6 @@ except ImportError:
 import argparse
 from colorama import init, Fore, Back
 import json
-from multiprocessing import Process
 from multiprocessing.pool import ThreadPool
 import os
 
@@ -62,7 +61,7 @@ config.read(config_filename)
 
 # initialise colorama and thread pool
 init(autoreset=True)
-pool = ThreadPool(processes=10)
+pool = ThreadPool(processes=6)
 
 
 def binance_convert_crypto(frm="LTC", to="BTC"):
@@ -170,8 +169,7 @@ def set_fiat(fiat):
     """Sets the default fiat currency for the user"""
     try:
         print("[*] updating standard fiat to {} ...".format(fiat))
-        thread = Process(target=adjust_readings_to_new_fiat, args=(fiat,))
-        thread.start()
+        adjust_readings_to_new_fiat(fiat)
         config.set('currency', 'FIAT', fiat)
         with open(config_filename, 'w') as configfile:
             config.write(configfile)
