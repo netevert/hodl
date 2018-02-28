@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Updated changelog
 - Updated contribution guide
+- Style of readme badges
 
 ### Fixed
 - Fixed bug that caused incorrect price change percentage reports to be
