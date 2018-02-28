@@ -4,9 +4,9 @@
 [![PyPI](https://img.shields.io/pypi/v/hodl.svg?style=flat-square)](https://pypi.python.org/pypi/hodl)
 [![PyPI](https://img.shields.io/pypi/status/hodl.svg?style=flat-square)](https://pypi.python.org/pypi/hodl)
 [![PyPI](https://img.shields.io/pypi/pyversions/hodl.svg?style=flat-square)](https://pypi.python.org/pypi/hodl)
-[![Build Status](https://travis-ci.org/errantbot/hodl.svg?branch=master?style=flat-square)](https://travis-ci.org/errantbot/hodl)
-[![Coverage Status](https://coveralls.io/repos/github/errantbot/hodl/badge.svg?branch=master?style=flat-square)](https://coveralls.io/github/errantbot/hodl?branch=master)
-[![Donations](https://img.shields.io/badge/donate-bitcoin-orange.svg?logo=bitcoin?style=flat-square)](https://github.com/errantbot/hodl/tree/master#donations)
+[![Build Status](https://travis-ci.org/errantbot/hodl.svg?branch=master&style=flat-square)](https://travis-ci.org/errantbot/hodl)
+[![Coverage Status](https://coveralls.io/repos/github/errantbot/hodl/badge.svg?branch=master&style=flat-square)](https://coveralls.io/github/errantbot/hodl?branch=master)
+[![Donations](https://img.shields.io/badge/donate-bitcoin-orange.svg?logo=bitcoin&style=flat-square)](https://github.com/errantbot/hodl/tree/master#donations)
 
 HODL is your friendly, no-nonsense tool to instantaneously check
 cryptocurrency prices on the command line, helping you HODL one day at a
