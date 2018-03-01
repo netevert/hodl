@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Updated homepage links to new project owner
 - Updated license references to new project owner
 
+### Fixed
+- Broken travis links and setup
+
 ## [1.1.1] - 2018-02-28
 ### Added
 - Maintenance status badge on README.md
