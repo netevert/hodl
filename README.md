@@ -1,12 +1,12 @@
-![Icon](https://github.com/errantbot/hodl/blob/dev/docs/icon.png)
+![Icon](https://github.com/netevert/hodl/blob/master/docs/icon.png)
 =================================================================
 [![Maintenance](https://img.shields.io/maintenance/yes/2018.svg)]()
 [![PyPI](https://img.shields.io/pypi/v/hodl.svg)](https://pypi.python.org/pypi/hodl)
 [![PyPI](https://img.shields.io/pypi/status/hodl.svg)](https://pypi.python.org/pypi/hodl)
 [![PyPI](https://img.shields.io/pypi/pyversions/hodl.svg)](https://pypi.python.org/pypi/hodl)
-[![Build Status](https://travis-ci.org/errantbot/hodl.svg?branch=master)](https://travis-ci.org/errantbot/hodl)
-[![Coverage Status](https://coveralls.io/repos/github/errantbot/hodl/badge.svg?branch=master)](https://coveralls.io/github/errantbot/hodl?branch=master)
-[![Donations](https://img.shields.io/badge/donate-bitcoin-orange.svg?logo=bitcoin)](https://github.com/errantbot/hodl/tree/master#donations)
+[![Build Status](https://travis-ci.org/netevert/hodl.svg?branch=master)](https://travis-ci.org/netevert/hodl)
+[![Coverage Status](https://coveralls.io/repos/github/netevert/hodl/badge.svg?branch=master)](https://coveralls.io/github/netevert/hodl?branch=master)
+[![Donations](https://img.shields.io/badge/donate-bitcoin-orange.svg?logo=bitcoin)](https://github.com/netevert/hodl/blob/master/README.md#donations)
 
 HODL is your friendly, no-nonsense tool to instantaneously check
 cryptocurrency prices on the command line, helping you HODL one day at a
@@ -15,7 +15,7 @@ time :)
 
 Running HODL is easy:
 
-![Demo](https://github.com/errantbot/hodl/blob/master/docs/demo.gif)
+![Demo](https://github.com/netevert/hodl/blob/master/docs/demo.gif)
 
 Installation
 ============
@@ -76,10 +76,10 @@ to check what\'s in the development pipeline.
 Bugs/Requests/Contributing
 ==========================
 
-Please use the [GitHub issue tracker](https://github.com/errantbot/hodl/issues) to submit bugs or request
+Please use the [GitHub issue tracker](https://github.com/netevert/hodl/issues) to submit bugs or request
 features.
 
-To contribute please consult the [contribution guide](https://github.com/errantbot/hodl/blob/master/CONTRIBUTING.md).
+To contribute please consult the [contribution guide](https://github.com/netevert/hodl/blob/master/CONTRIBUTING.md).
 
 License
 =======

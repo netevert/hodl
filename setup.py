@@ -11,12 +11,12 @@ HODL is your friendly, no-nonsense tool to instantaneously check cryptocurrency
 prices on the command line, helping you HODL one day at a time :)
 
 Please visit the project's main documentation page, found at:
-https://github.com/errantbot/hodl
+https://github.com/netevert/hodl
 """
 
 setup(
     name='hodl',
-    version='1.1.1',
+    version='1.1.2',
     # You can just specify package directories manually here if your project is
     # simple. Or you can use find_packages().
     #
@@ -29,10 +29,10 @@ setup(
     packages=find_packages(exclude=['contrib', 'docs', 'tests', 'venv']),
     install_requires=['colorama'],  # Required,
 
-    url='https://github.com/errantbot/hodl',
+    url='https://github.com/netevert/hodl',
     license='MIT',
-    author='errantbot',
-    author_email='errantbot@tutanota.com',
+    author='netevert',
+    author_email='netevert@protonmail.com',
     description='A  friendly, no-nonsense tool to instantaneously check '
                 'cryptocurrency prices.',
     # This is an optional longer description of your project that represents
