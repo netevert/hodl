@@ -146,13 +146,18 @@ def get_crypto_price(crypto, fiat):
     return converted_btc_value * btc_price
 
 
-def get_majors(fiat=config.get("currency", "FIAT")):
+def get_majors(fiat=config.get("currency", "FIAT"), fast=False):
     """Returns the conversion prices for all supported crypto-currencies"""
     reports = []
+    if not fast:
+        for crypto in cryptos:
+            async_result = pool.apply_async(get_price, (crypto.lower(), fiat,))
+            reports.append(async_result.get())
+        return reports
+
     for crypto in cryptos:
         async_result = pool.apply_async(get_price, (crypto.lower(), fiat,))
-        reports.append(async_result.get())
-    return reports
+        print_report(async_result.get(), first_run=True)
 
 
 def adjust_readings_to_new_fiat(fiat):
@@ -259,6 +264,8 @@ def main():
                                      epilog=epilog)
     group = parser.add_mutually_exclusive_group()
     group_2 = parser.add_mutually_exclusive_group()
+    parser.add_argument('-r', '--report',
+                        help='prints a price change report', type=bool, const=True, nargs="?")
     group_2.add_argument("-cp", "--configure_portfolio",
                          help="configure portfolio command",
                          nargs=2, metavar=('CRYPTOCURRENCY', 'AMOUNT'))
@@ -326,11 +333,15 @@ def main():
                   " '{}' (choose from {})".format(
                 args.view_portfolio, [str(crypto) for crypto in cryptos]))
 
-    else:
+    elif args.report:
+        print("[*] generating price change report")
         reports = get_majors()
         i = len(max(reports, key=len))
         for report in reports:
             print_report(report, i)
+
+    else:
+        get_majors(fast=True)
 
 
 if __name__ == '__main__':
