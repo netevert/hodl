@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 - Improved speed of price lookups
+- Bug that broke the formatting of some crypto to crypto conversion reports
 
 ### Removed
 - Price change reports from single cryptocurrency price and conversion lookups
