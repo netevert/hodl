@@ -52,7 +52,8 @@ View price percentage variations between lookups:
 Set preferred conversion currency:
 
     C:\>hodl -sf USD
-    [*] USD configured as standard fiat
+    [*] updating standard fiat to USD ...
+    [*] success: USD configured as standard fiat
 
 View price for a single cryptocurrency:
 

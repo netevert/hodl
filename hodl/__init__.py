@@ -106,9 +106,12 @@ def coinbase_convert_crypto(frm="LTC", to="BTC"):
                                          round(frm_price /
                                                to_price, 8), to.upper())
         else:
-            return "1 {} = {} {}".format(frm.upper(),
-                                         str(binance_convert_crypto(frm, to)),
-                                         to.upper())
+            conversion = binance_convert_crypto(frm, to)
+            if '[*] error' not in conversion:
+                return conversion
+            else:
+                return "[*] unsupported crypto to crypto conversion operation"
+
     except (HTTPError, IndexError):
         return "[*] error, check that you are using correct crypto symbols"
 
@@ -265,7 +268,8 @@ def main():
     group = parser.add_mutually_exclusive_group()
     group_2 = parser.add_mutually_exclusive_group()
     parser.add_argument('-r', '--report',
-                        help='prints a price change report', type=bool, const=True, nargs="?")
+                        help='prints a price change report', type=bool,
+                        const=True, nargs="?")
     group_2.add_argument("-cp", "--configure_portfolio",
                          help="configure portfolio command",
                          nargs=2, metavar=('CRYPTOCURRENCY', 'AMOUNT'))
