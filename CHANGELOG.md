@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - unreleased
+### Added
+- DASH support
+- ZEC support
+- Improved documentation
+- New icon
+
+### Changed
+- Moved price change report under a dedicated argument (-r)
+
+### Fixed
+- Improved speed of price lookups
+
+### Removed
+- Price change reports from single cryptocurrency price and conversion lookups
+
 ## [1.1.2] - 2018-03-01
 ### Changed
 - Project ownership

@@ -1,5 +1,5 @@
-![Icon](https://github.com/netevert/hodl/blob/master/docs/icon.png)
-=================================================================
+![Icon](https://github.com/netevert/hodl/blob/dev/docs/icon_2.png)
+==================================================================
 [![Maintenance](https://img.shields.io/maintenance/yes/2018.svg)]()
 [![PyPI](https://img.shields.io/pypi/v/hodl.svg)](https://pypi.python.org/pypi/hodl)
 [![PyPI](https://img.shields.io/pypi/status/hodl.svg)](https://pypi.python.org/pypi/hodl)
@@ -33,6 +33,21 @@ Currencies supported:
 - Litecoin ([LTC](https://litecoin.com/))
 - Monero ([XMR](https://getmonero.org/))
 - Ripple ([XRP](https://ripple.com/))
+- Dash ([DASH](https://www.dash.org/))
+- Zcash ([ZEC](https://z.cash/))
+
+View price percentage variations between lookups:
+
+    C:\>hodl -r
+    [*] generating price change report
+    1 BTC = 11092.47 USD  -0.07%
+    1 BCH = 1243.01 USD   -0.12%
+    1 ETH = 849.53 USD    -0.06%
+    1 LTC = 208.18 USD     0.00%
+    1 XMR = 347.17 USD     0.03%
+    1 XRP = 0.92 USD       0.00%
+    1 DASH = 599.18 USD   -0.07%
+    1 ZEC = 389.29 USD    -0.03%
 
 Set preferred conversion currency:
 
@@ -42,7 +57,7 @@ Set preferred conversion currency:
 View price for a single cryptocurrency:
 
     C:\>hodl -c btc
-    1 BTC = 13500.01 USD  -0.05% decrease
+    1 BTC = 13500.01 USD
 
 Convert the price for a single cryptocurrency against your preferred
 fiat currency:
@@ -53,7 +68,7 @@ fiat currency:
 Convert the price for a single cryptocurrency against another cryptocurrency:
 
     C:\>hodl -c ltc -f CHF
-    1 LTC = 223.93 CHF  -3.06% decrease
+    1 LTC = 223.93 CHF
 
 View total value of portfolio holdings:
 
@@ -64,6 +79,8 @@ View total value of portfolio holdings:
     [*] LTC portfolio value: 120.05 USD
     [*] XMR portfolio value: 1122.43 USD
     [*] XRP portfolio value: 0.00 USD
+    [*] DASH portfolio value: 0.00 USD
+    [*] ZEC portfolio value: 0.00 USD
 
 Configure portfolio holdings:
 
