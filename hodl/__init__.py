@@ -9,6 +9,7 @@ except ImportError:
     from urllib2 import urlopen, Request, HTTPError
 import argparse
 from colorama import init, Fore, Back
+from functools import partial
 import json
 from multiprocessing.pool import ThreadPool
 import os
@@ -61,7 +62,7 @@ config.read(config_filename)
 
 # initialise colorama and thread pool
 init(autoreset=True)
-pool = ThreadPool(processes=6)
+pool = ThreadPool(processes=4)
 
 
 def binance_convert_crypto(frm="LTC", to="BTC"):
@@ -151,16 +152,13 @@ def get_crypto_price(crypto, fiat):
 
 def get_majors(fiat=config.get("currency", "FIAT"), fast=False):
     """Returns the conversion prices for all supported crypto-currencies"""
-    reports = []
     if not fast:
-        for crypto in cryptos:
-            async_result = pool.apply_async(get_price, (crypto.lower(), fiat,))
-            reports.append(async_result.get())
+        reports = pool.map(partial(get_price, fiat=fiat,), cryptos)
         return reports
 
-    for crypto in cryptos:
-        async_result = pool.apply_async(get_price, (crypto.lower(), fiat,))
-        print_report(async_result.get(), first_run=True)
+    reports = pool.map(partial(get_price, fiat=fiat, ), cryptos)
+    for report in reports:
+        print_report(report, first_run=True)
 
 
 def adjust_readings_to_new_fiat(fiat):
