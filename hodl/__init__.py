@@ -14,7 +14,7 @@ from functools import partial
 import json
 from multiprocessing.pool import ThreadPool
 import os
-import sys
+import six
 
 # constants
 description = "Your friendly, no-nonsense tool to " \
@@ -281,10 +281,7 @@ def print_news():
     print("[*] feed listing")
     for i in outlets:
         print("{}: {}".format(Back.RED + str(i), Back.RED + outlets[i][0]))
-    if sys.version_info >= (2, 7):
-        outlet_selection = raw_input("[*] select feed: ")
-    else:
-        outlet_selection = input("[*] select feed: ")
+    outlet_selection = six.moves.input("[*] select feed: ")
     try:
         parse_news(outlets[int(outlet_selection)][1])
     except ValueError:

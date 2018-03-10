@@ -1,3 +1,4 @@
+six
 feedparser
 colorama==0.3.9
 coverage==4.4.2
