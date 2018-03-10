@@ -156,7 +156,7 @@ def get_crypto_price(crypto, fiat):
 def get_majors(fiat=config.get("currency", "FIAT"), fast=False):
     """Returns the conversion prices for all supported crypto-currencies"""
     if not fast:
-        reports = pool.map(partial(get_price, fiat=fiat,), cryptos)
+        reports = pool.map(partial(get_price, fiat=fiat, ), cryptos)
         return reports
 
     reports = pool.map(partial(get_price, fiat=fiat, ), cryptos)
@@ -270,21 +270,23 @@ def parse_news(outlet):
         article_link = entry.link
         article_published_at = entry.published  # Unicode string
         article_author = entry.author
-        print("{}[{}]".format(article_title, article_link))
-        print("Published at {}".format(article_published_at))
-        print("Published by {}".format(article_author))
+        print("\n==============================")
+        print("{}".format(Back.GREEN + article_title))
+        print("{}, {}".format(Back.RED + article_author, article_published_at))
+        print("{}".format(Back.BLUE + article_link))
 
 
 def print_news():
     """Function to select and view cryptocurrency news feeds"""
+    print("[*] feed listing")
     for i in outlets:
-        print("{}:{}".format(i, outlets[i][0]))
-    outlet_selection = input("[*] outlet selection: ")
+        print("{}: {}".format(Back.RED + str(i), Back.RED + outlets[i][0]))
+    outlet_selection = input("[*] select feed: ")
     try:
         parse_news(outlets[int(outlet_selection)][1])
     except ValueError:
-        print("HODL: error: input a valid selection")
-        
+        print("HODL: error: invalid input: please select a number")
+
 
 def main():
     """Main program entry point; parses and interprets command line arguments"""
