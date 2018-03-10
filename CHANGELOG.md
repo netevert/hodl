@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - ZEC support
 - Improved documentation
 - New icon
+- News feed
 
 ### Changed
 - Moved price change report under a dedicated argument (-r)

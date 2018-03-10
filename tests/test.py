@@ -21,11 +21,10 @@ def test_coinbase_convert_crypto():
     assert "1 LTC =" in out
     assert "BTC" in out
     out = hodl.coinbase_convert_crypto(frm="xrp", to="xmr")
-    assert "1 XRP =" in out
-    assert "XMR" in out
+    assert "[*] unsupported crypto to crypto conversion operation" in out
     # test HTTPError handling
     out = hodl.coinbase_convert_crypto(frm="ABC", to="DEF")
-    assert '[*] error, check you are using correct crypto symbols' in out
+    assert '[*] unsupported crypto to crypto conversion operation' in out
 
 
 def test_get_price():

@@ -20,7 +20,7 @@ import six
 description = "Your friendly, no-nonsense tool to " \
               "instantaneously check cryptocurrency prices"
 epilog = "hodl.py: helping you HODL one day at a time :)"
-__version__ = "v.1.1.0"
+__version__ = "v.1.2.0"
 cryptos = ['btc', 'bch', 'eth', 'ltc', 'xmr', 'xrp', 'dash', 'zec']
 iso4217codes = ["AED", "AFN", "ALL", "AMD", "ANG", "AOA", "ARS", "AUD", "AWG",
                 "AZN",

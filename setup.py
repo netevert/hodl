@@ -27,7 +27,7 @@ setup(
     #   py_modules=["my_module"],
     #
     packages=find_packages(exclude=['contrib', 'docs', 'tests', 'venv']),
-    install_requires=['colorama'],  # Required,
+    install_requires=['colorama', 'six', 'feedparser'],  # Required,
 
     url='https://github.com/netevert/hodl',
     license='MIT',
