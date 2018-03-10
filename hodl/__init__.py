@@ -8,7 +8,9 @@ except ImportError:
     import ConfigParser as cp
     from urllib2 import urlopen, Request, HTTPError
 import argparse
+from builtins import input
 from colorama import init, Fore, Back
+import feedparser
 from functools import partial
 import json
 from multiprocessing.pool import ThreadPool
@@ -53,6 +55,7 @@ iso4217codes = ["AED", "AFN", "ALL", "AMD", "ANG", "AOA", "ARS", "AUD", "AWG",
                 "VND", "VUV", "WST", "XAF", "XCD", "XDR", "XOF", "XPF", "YER",
                 "ZAR",
                 "ZMW", "ZWD"]
+outlets = {1: ["Crypto Currency News", "https://cryptocurrencynews.com/feed/"]}
 
 # load config file
 config_filename = os.path.join(os.path.dirname(os.path.realpath(__file__)),
@@ -259,6 +262,30 @@ def print_report(report, alignment=0, first_run=False):
         print_report(report=report, first_run=True)
 
 
+def parse_news(outlet):
+    """Parses rss news feeds"""
+    feed = feedparser.parse(outlet)
+    for entry in feed.entries:
+        article_title = entry.title
+        article_link = entry.link
+        article_published_at = entry.published  # Unicode string
+        article_author = entry.author
+        print("{}[{}]".format(article_title, article_link))
+        print("Published at {}".format(article_published_at))
+        print("Published by {}".format(article_author))
+
+
+def print_news():
+    """Function to select and view cryptocurrency news feeds"""
+    for i in outlets:
+        print("{}:{}".format(i, outlets[i][0]))
+    outlet_selection = input("[*] outlet selection: ")
+    try:
+        parse_news(outlets[int(outlet_selection)][1])
+    except ValueError:
+        print("HODL: error: input a valid selection")
+        
+
 def main():
     """Main program entry point; parses and interprets command line arguments"""
     parser = argparse.ArgumentParser(prog="HODL", description=description,
@@ -267,6 +294,9 @@ def main():
     group_2 = parser.add_mutually_exclusive_group()
     parser.add_argument('-r', '--report',
                         help='prints a price change report', type=bool,
+                        const=True, nargs="?")
+    parser.add_argument('-n', '--news',
+                        help='view news feed', type=bool,
                         const=True, nargs="?")
     group_2.add_argument("-cp", "--configure_portfolio",
                          help="configure portfolio command",
@@ -341,7 +371,8 @@ def main():
         i = len(max(reports, key=len))
         for report in reports:
             print_report(report, i)
-
+    elif args.news:
+        print_news()
     else:
         get_majors(fast=True)
 
