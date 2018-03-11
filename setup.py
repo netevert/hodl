@@ -16,7 +16,7 @@ https://github.com/netevert/hodl
 
 setup(
     name='hodl',
-    version='1.1.2',
+    version='1.2.0',
     # You can just specify package directories manually here if your project is
     # simple. Or you can use find_packages().
     #
