@@ -36,7 +36,8 @@ Currencies supported:
 - Dash ([DASH](https://www.dash.org/))
 - Zcash ([ZEC](https://z.cash/))
 
-View price percentage variations between lookups:
+<details><summary>View price percentage variations between lookups</summary>
+<p>
 
     C:\>hodl -r
     [*] generating price change report
@@ -48,30 +49,46 @@ View price percentage variations between lookups:
     1 XRP = 0.92 USD       0.00%
     1 DASH = 599.18 USD   -0.07%
     1 ZEC = 389.29 USD    -0.03%
+</p>
+</details>
 
-Set preferred conversion currency:
+<details><summary>Set preferred conversion currency</summary>
+<p>
 
     C:\>hodl -sf USD
     [*] updating standard fiat to USD ...
     [*] success: USD configured as standard fiat
+</p>
+</details>
 
-View price for a single cryptocurrency:
+<details><summary>View price for a single cryptocurrency</summary>
+<p>
 
     C:\>hodl -c btc
     1 BTC = 13500.01 USD
+    
+</p>
+</details>
 
-Convert the price for a single cryptocurrency against your preferred
-fiat currency:
-
-    C:\>hodl -cc btc ltc
-    1 BTC = 61.36111727 LTC
-
-Convert the price for a single cryptocurrency against another cryptocurrency:
+<details><summary>Convert the price for a single cryptocurrency against selected
+fiat currencies</summary>
+<p>
 
     C:\>hodl -c ltc -f CHF
     1 LTC = 223.93 CHF
+</p>
+</details>
 
-View total value of portfolio holdings:
+<details><summary>Convert the price for a single cryptocurrency against another cryptocurrency</summary>
+<p>
+
+    C:\>hodl -cc btc ltc
+    1 BTC = 61.36111727 LTC
+</p>
+</details>
+
+<details><summary>View total value of portfolio holdings</summary>
+<p>
 
     C:\>hodl -vp
     [*] BTC portfolio value: 123475.20 USD
@@ -82,11 +99,17 @@ View total value of portfolio holdings:
     [*] XRP portfolio value: 0.00 USD
     [*] DASH portfolio value: 0.00 USD
     [*] ZEC portfolio value: 0.00 USD
+</p>
+</details>
 
-Configure portfolio holdings:
+<details><summary>Configure portfolio holdings</summary>
+<p>
 
     C:\hodl -cp btc 15
     [*] BTC portfolio value set at 15 coins
+</p>
+</details>
+<p></p>
 
 **HODL is under active development**, consult the [GitHub issue tracker](https://github.com/errantbot/hodl/issues)
 to check what\'s in the development pipeline.
@@ -113,7 +136,10 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 Donations
 =========
 
-If you like HODL please consider donating:
-
+<details><summary>If you like HODL please consider donating</summary>
+<p>
+    
     Bitcoin:  13i3hFGN1RaQqdeWqmPTMuYEj9FiJWuMWf
     Litecoin: LZqLoRNHvJyuKz99mNAgVUj6M8iyEQuio9
+</p>
+</details>
