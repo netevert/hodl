@@ -53,7 +53,7 @@ Currencies supported:
 </details>
 
 <details><summary>Set preferred conversion currency</summary>
-</p>
+<p>
 
     C:\>hodl -sf USD
     [*] updating standard fiat to USD ...
@@ -62,7 +62,7 @@ Currencies supported:
 </details>
 
 <details><summary>View price for a single cryptocurrency</summary>
-</p>
+<p>
 
     C:\>hodl -c btc
     1 BTC = 13500.01 USD
@@ -72,7 +72,7 @@ Currencies supported:
 
 <details><summary>Convert the price for a single cryptocurrency against your preferred
 fiat currency</summary>
-</p>
+<p>
 
     C:\>hodl -cc btc ltc
     1 BTC = 61.36111727 LTC
@@ -80,7 +80,7 @@ fiat currency</summary>
 </details>
 
 <details><summary>Convert the price for a single cryptocurrency against another cryptocurrency</summary>
-</p>
+<p>
 
     C:\>hodl -c ltc -f CHF
     1 LTC = 223.93 CHF
@@ -88,7 +88,7 @@ fiat currency</summary>
 </details>
 
 <details><summary>View total value of portfolio holdings</summary>
-</p>
+<p>
 
     C:\>hodl -vp
     [*] BTC portfolio value: 123475.20 USD
@@ -103,12 +103,13 @@ fiat currency</summary>
 </details>
 
 <details><summary>Configure portfolio holdings</summary>
-</p>
+<p>
 
     C:\hodl -cp btc 15
     [*] BTC portfolio value set at 15 coins
 </p>
 </details>
+<p></p>
 
 **HODL is under active development**, consult the [GitHub issue tracker](https://github.com/errantbot/hodl/issues)
 to check what\'s in the development pipeline.
@@ -135,7 +136,10 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 Donations
 =========
 
-If you like HODL please consider donating:
-
+<details><summary>If you like HODL please consider donating</summary>
+<p>
+    
     Bitcoin:  13i3hFGN1RaQqdeWqmPTMuYEj9FiJWuMWf
     Litecoin: LZqLoRNHvJyuKz99mNAgVUj6M8iyEQuio9
+</p>
+</details>
