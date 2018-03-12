@@ -70,20 +70,20 @@ Currencies supported:
 </p>
 </details>
 
-<details><summary>Convert the price for a single cryptocurrency against your preferred
-fiat currency</summary>
+<details><summary>Convert the price for a single cryptocurrency against selected
+fiat currencies</summary>
 <p>
 
-    C:\>hodl -cc btc ltc
-    1 BTC = 61.36111727 LTC
+    C:\>hodl -c ltc -f CHF
+    1 LTC = 223.93 CHF
 </p>
 </details>
 
 <details><summary>Convert the price for a single cryptocurrency against another cryptocurrency</summary>
 <p>
 
-    C:\>hodl -c ltc -f CHF
-    1 LTC = 223.93 CHF
+    C:\>hodl -cc btc ltc
+    1 BTC = 61.36111727 LTC
 </p>
 </details>
 
